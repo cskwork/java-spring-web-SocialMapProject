@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN'
+'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+
+<sqlMap namespace="hopelist">
+<typeAlias alias="hopelist" type="hopelist.HopeListVO" />
+	<resultMap class="hopelist" id="hopelistRes">
+		<result property="no" column="no" />
+		<result property="sendid" column="sendid" />
+		<result property="getid" column="getid" />
+		<result property="regdate" column="regdate" />
+		<result property="log" column="log" />
+	</resultMap>
+	
+	<select id="selectHopeList" resultMap="hopelistRes" parameterClass="string">
+		select * from hopelist where getid=#id#
+	</select>
+	
+	<insert id="insertHopeList" parameterClass="hopelist">
+		insert into hopelist (no,sendid,getid,regdate,log)
+		 values (hopelist_seq.nextval,#sendid#,#getid#,#regdate#,#log#)
+	</insert>
+	
+	<delete id="deleteHopeList" parameterClass="hopelist">
+ 		delete from hopelist where no=#no#
+ 	</delete>
+ 	
+ 	<update id="insertTeam" parameterClass="hopelist">
+ 		update member set teamno1=(select teamno from projectteam where leaderid=#sendid#)
+ 		where id=#getid#
+	</update>
+	
+	<update id="addCurrmem" parameterClass="hopelist">
+		update projectteam set currmem=currmem+1, recmem=recmem-1 where leaderid=#sendid#
+	</update>
+	
+	
+
+</sqlMap>
+

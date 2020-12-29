@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN'
+'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+
+<sqlMap namespace="rating">
+	<typeAlias alias="rating" type="rating.RatingVO" />
+	<resultMap class="rating" id="ratingRes">
+		<result property="getid" column="getid" />
+		<result property="sendid" column="sendid" />
+		<result property="rate" column="rate" />
+		<result property="teamexp" column="teamexp" />
+		<result property="ratingregdate" column="ratingregdate" />
+		<result property="reputation" column="reputation"/>
+		<result property="title" column="title"/>
+	</resultMap>
+
+	
+	<select id="RatingList" resultMap="ratingRes" parameterClass="rating">	
+		SELECT *
+		FROM rating r
+		INNER JOIN projectTeam p ON r.teamexp=p.teamno
+		where getid=#sendid#
+	</select>
+	
+	<insert id="RatingWrite" parameterClass="rating">
+		insert into rating
+		(sendid,getid,rate,teamexp,ratingregdate,reputation) 
+		values (#sendid#,#getid#,#rate#,#teamexp#,#ratingregdate#,#reputation#)
+	</insert>
+
+	<delete id="RatingDelete" parameterClass="rating">
+		delete from rating where
+		getid=#getid#	
+	</delete>
+	
+	<select id="selectMember" resultClass="rating" parameterClass="rating">
+		select id,teamno from member where teamno in (select teamno from member m inner join rating r on r.sendid=m.id
+		where sendid=#sendid#) AND (member.id!=#sendid#)
+	</select>
+</sqlMap>

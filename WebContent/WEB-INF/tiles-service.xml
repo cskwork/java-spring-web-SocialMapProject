@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="euc-kr"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+<tiles-definitions>
+	<definition name="socialMap" 	template="/Homepage/homepage.jsp" >
+		<!-- 페이지 제목 -->
+		<put-attribute name="title" 		value="/title/title.jsp" />
+		<!-- 배너 및 로그인,  -->
+		<put-attribute name="top"			value="/top/top.jsp" />
+		<!-- 드롭메뉴 -->
+		<put-attribute name="left"			value="/left/left.jsp" />
+		<!-- 고객센터 -->
+		<put-attribute name="right" 		value="/right/right.jsp" />
+		<!-- 제작자 정보 -->
+		<put-attribute name="bottom" 		value="/bottom/bottom.jsp" />
+		
+		<!-- 메인 페이지 -->
+		<put-attribute name="main" 			value="/main/main.jsp" />
+		
+		<!-- 로그인 관련 -->
+		<put-attribute name="login" 		value="/login/Login.jsp" />
+		<put-attribute name="signup" 		value="/login/SignUp.jsp" />
+		<put-attribute name="findid" 		value="/login/FindId.jsp" />
+		<put-attribute name="findpwd" 		value="/login/FindPwd.jsp" />
+		<put-attribute name="findresult" 	value="/login/Result.jsp" />
+		
+		<!-- 회원 정보 관련 -->
+		<put-attribute name="memberinfo" 		value="/mypage/myPageHome.jsp" />
+		<put-attribute name="membermodify" 		value="/mypage/favorite/modifyMember.jsp" />
+		
+		<!-- 관심 게시글 관련 -->
+		<put-attribute name="favspeclist"       value="/mypage/favorite/favSpecList.jsp" />
+      	<put-attribute name="favspecinfo"       value="/mypage/favorite/favSpecinfo.jsp" />
+      	<put-attribute name="favprojlist"       value="/mypage/favorite/favProjList.jsp" />
+      	<put-attribute name="favprojinfo"       value="/mypage/favorite/favProjinfo.jsp" />
+		
+		<!-- 나의 프로젝트 관련 -->
+		<put-attribute name="myprojlist" 	value="/mypage/myproject/list.jsp" />
+		<put-attribute name="myprojinfo" 	value="/mypage/myproject/info.jsp" />
+		<put-attribute name="myprojmodify" 	value="/mypage/myproject/modify.jsp" />
+		
+		<!-- 팀 게시글 관련 -->
+		<put-attribute name="projlist" 		value="/content/project/list.jsp" />
+		<put-attribute name="projinfo" 		value="/content/project/info.jsp" />
+		<put-attribute name="projwrite" 	value="/content/project/write.jsp" />
+		
+		<!-- 스팩 게시글 관련 -->
+		<put-attribute name="speclist" 		value="/content/specreg/list.jsp" />
+		<put-attribute name="specinfo" 		value="/content/specreg/info.jsp" />
+		<put-attribute name="specmodify"	value="/content/specreg/modify.jsp"/>
+		
+		<!-- 대회 / 공모전 관련 -->
+		<put-attribute name="complist" 		value="/content/competition/List.jsp" />
+		<put-attribute name="compinfo" 		value="/content/competition/Info.jsp" />
+		
+		<!-- Q & A -->
+		<put-attribute name="qnalist" 		value="/custService/qna/List.jsp" />
+		<put-attribute name="qnainfo" 		value="/custService/qna/Info.jsp" />
+		<put-attribute name="qnawrite" 		value="/custService/qna/Write.jsp" />
+		<!-- A S Notice -->
+		<put-attribute name="aslist" 		value="/custService/as/List.jsp" />
+		<put-attribute name="asinfo" 		value="/custService/as/Info.jsp" />
+		<!-- F A Q -->
+		<put-attribute name="faqlist" 		value="/custService/faq/List.jsp" />
+		
+		<!-- HOPELIST -->
+		<put-attribute name="hopelist" 		value="/mypage/hopelist/list.jsp" />
+		<put-attribute name="deletehopelist" value="/mypage/hopelist/check.jsp" />
+		<put-attribute name="sendcomplete" 		value="/mypage/hopelist/list.jsp" />
+		
+		<put-attribute name="guide"       value="/guide/guideHome.jsp" />
+      	<put-attribute name="guide1"       value="/guide/guideHome1.jsp" />
+      	<put-attribute name="guide2"       value="/guide/guideHome2.jsp" />
+      	<put-attribute name="guide3"       value="/guide/guideHome3.jsp" />
+	</definition>
+</tiles-definitions>

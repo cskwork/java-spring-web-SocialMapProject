@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+
+<sqlMap namespace="major">
+	<typeAlias alias="maj" type="major.MajorVO"/>
+	<resultMap class="maj" id="majRes">
+		<result property="major_no" column="major_no"/>
+		<result property="major_name" column="major_name"/>
+	</resultMap>
+	
+	<sql id="select-all">
+		select * from major 
+	</sql>
+	
+	<select id="selectFilterMaj" resultClass="String">
+		select major_name from major order by major_name asc
+	</select>
+	
+	<select id="selectList" resultMap="majRes" parameterClass="maj">
+		<include refid="select-all"/>
+		order by major_name asc
+	</select>
+	
+	<select id="search" parameterClass="String" resultMap="majRes">
+		<include refid="select-all"/>
+		where major_name like #search# order by major_name asc
+	</select>
+</sqlMap>

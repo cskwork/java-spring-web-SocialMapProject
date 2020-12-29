@@ -1,0 +1,97 @@
+@charset "EUC-KR";
+body{font-family: 'Noto Sans KR', sans-serif; color:#3d3d3d; font-size:17px; font-weight:300;}
+body, h1, h2, h3, h4, h5, h6, p, ul, li{margin:0; padding:0;}
+ul, li{list-style:none;}
+a img{border:0;}
+table{border-spacing: 0;}
+
+.clearfix:after{display:block;clear:both;content:".";visibility:hidden;height:0;}
+.clearfix{display:block;}
+
+.wrap{width: 1200px;}
+
+.contents{padding:90px 0;}
+
+
+.title{height: 120px; background-color: #f5f5ff;}
+.title h2{text-align:left; font-size: 35px; color:#1761a0; padding-top: 33px;}
+
+.searchtable{width:100%; text-align:left; padding: 25px 0 25px 0; border-spacing: 0;}
+
+
+.listtable{width:100%; text-align: center; border-spacing:0;}
+.listtable .list_title>td{padding:25px 0 25px 0; border-bottom: 1px solid #bcc8f4;}
+.listtable .list_title>td>strong{font-size: 25px; color:#5d5d5d;}
+
+.list_title2>td{padding:10px 0 10px 0; border-bottom: 1px solid #bcc8f4;}
+.list_title2>td>strong{font-size: 20px; color:#5d5d5d;}
+
+.listtable .no{text-align: center; font-size: 22px;}
+
+.listtable .list:hover{background-color:#bcc8f4; }
+.listtable .list>td{padding:15px 0 15px 0; border-bottom: 1px solid #bcc8f4;}
+.listtable .list>td>a{text-decoration: none; color:#3d3d3d; font-size: 22px;}
+.listtable .list>td>a:hover {text-decoration: underline;}
+
+
+.searchtable{border:1px solid #bcc8f4; margin-top: 50px; padding-left: 30px; padding-right: 30px;}
+.searchtable .selectbox{display: block; padding-bottom: 40px;}
+
+.btn>td{padding-top:25px; text-align: right;}
+input[type=button]{display:inline-block; border:1px solid #3d3d3d; background-color: #fff; padding:5px 10px 5px 10px;}
+input[type=button]:hover {background-color: #3d3d3d; color:#fff;}
+
+input[type=submit]{display:inline-block; border:1px solid #1761a0; background-color: #fff; padding:5px 10px 5px 10px;}
+input[type=submit]:hover {background-color: #1761a0; color:#fff;}
+
+.searchbox{float: right; border: 1px solid #1761a0; display:inline-block;}
+.searchbox input[type=button]{ background-color: #fff; color: #1761a0;}
+.searchbox input[type=button]:hover{ background-color: #1761a0; color: #fff;}
+.searchbox input[type=text]{padding:10px; outline:none; display:inline-block; float: left; border: none;}
+
+.find{text-decoration: none; color:#5d5d5d; text-align: center;}
+
+.findbtn{display:inline-block; border:1px solid #1761a0; background-color: #fff; padding:5px 10px 5px 10px;}
+.findbtn:hover{background-color: #1761a0; color:#fff;}
+
+/* 스크롤 기능 */
+  #main_scroll {
+margin:0 auto;
+margin-bottom:10px;
+width:500px;
+height:500px;
+padding:0px;
+overflow:hidden;
+}
+#main_scroll ul {
+list-style:none;
+
+/* 이미지 사이즈 * 총 이미지(5) */
+width:2500px;
+height:500px;
+margin:0px;
+padding:0px;
+}
+#main_scroll ul li {
+float:left;
+width:500px;
+height:500px;
+margin:0px;
+padding:0px;
+}
+#main_scroll_bt {
+list-style:none;
+width:125px;
+height:14px;
+margin:0 auto;
+padding:0px;
+overflow:hidden;
+}
+#main_scroll_bt li {
+width:15px;
+height:14px;
+float:left;
+margin:0 10px 0 0;
+padding:0px;
+overflow:hidden;
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN'
+'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+
+<sqlMap namespace="msg">
+	<typeAlias alias="msg" type="msg.MsgVO" />
+	<resultMap class="msg" id="msgRes">
+		<result property="no" column="no" />
+		<result property="sendid" column="sendid" />
+		<result property="getid" column="getid" />
+		<result property="title" column="title" />
+		<result property="cont" column="cont" />
+		<result property="sendtime" column="sendtime" />
+	</resultMap>
+
+	<select id="MsgList" resultMap="msgRes" parameterClass="msg">
+		select * from msg
+		<dynamic prepend="WHERE">
+			<isNotNull prepend="AND" property="getid">
+				 getid=#getid#
+			</isNotNull>
+			<isNotNull prepend="AND" property="sendid">
+				 sendid=#sendid#
+			</isNotNull>
+		</dynamic>
+		 order by sendtime desc
+
+	</select>
+	<!--  -->
+	<select id="MsgInfo" resultMap="msgRes" parameterClass="int">
+		select * from msg
+		 where no=#no#
+	</select>
+
+	<insert id="MsgWrite" parameterClass="msg">
+		insert into msg
+		 (no,sendid,getid,title,cont,sendtime)
+		 values ((select max(no) from msg)+1,#sendid#,#getid#,#title#,#cont#,#sendtime#)
+	</insert>
+
+	<delete id="MsgDelete" parameterClass="msg">
+		delete from msg where
+		 no=#no#
+	</delete>
+</sqlMap>

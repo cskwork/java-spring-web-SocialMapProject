@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<!-- member, Login -->
+	<package name="member" extends="struts-default">	
+		<action name="SocialMap" class="member.MemberAction" method="home">
+			<result>/socialMap.tiles</result>
+		</action>
+				
+		<action name="Login" class="member.MemberAction">
+			<result>/socialMap.tiles</result>
+			<result name="admin">/admin/adminPageHome.jsp</result>
+		</action>
+
+		<action name="Logout" class="member.MemberAction" method="logout">
+			<result>/socialMap.tiles</result>
+		</action>
+
+		<action name="Find" class="member.MemberAction" method="find">
+			<result>/socialMap.tiles</result>
+		</action>
+		
+		<action name="ConfirmId" class="member.MemberAction" method="confirmid">
+			<result>/login/confirmId.jsp</result>
+		</action>
+
+		<action name="SignUp" class="member.MemberAction" method="signup">
+			<result>/socialMap.tiles</result>
+		</action>
+	</package>
+	
+	<!-- Major -->
+	<package name="major" extends="struts-default">
+		<action name="Major" class="major.MajorAction">
+			<result>/major/MajorCheck.jsp</result>
+		</action> 
+	</package>
+	
+	<!-- content -->
+	<package name="content" extends="struts-default">
+		<action name="ProjList" class="content.project.ProjectTeamAction">
+			<result>/socialMap.tiles</result>
+			<result name="admin">/admin/content/project/list.jsp</result>
+		</action>
+		<action name="ProjInfo" class="content.project.ProjectTeamAction" method="info">
+			<result>/socialMap.tiles</result>
+			<result name="admin">/admin/content/project/info.jsp</result>
+		</action>
+		<action name="ProjWrite" class="content.project.ProjectTeamAction" method="write">
+			<result>/socialMap.tiles</result>
+			<result name="list" type="chain">ProjList</result>
+		</action>
+		<action name="ProjModify" class="content.project.ProjectTeamAction" method="modify">
+			<result>/socialMap.tiles</result>
+			<result name="list" type="chain">ProjList</result>
+		</action>
+		<action name="ProjDelete" class="content.project.ProjectTeamAction" method="delete">
+			<result type="chain">ProjList</result>
+		</action>
+		
+		<action name="MyProjList" class="content.project.ProjectTeamAction" method="mylist">
+			<result>/socialMap.tiles</result>
+		</action>
+		
+		<action name="MyProjInfo" class="content.project.ProjectTeamAction" method="myinfo">
+			<result>/socialMap.tiles</result>
+		</action>
+		
+		<!-- Spec -->
+		<action name="SpecList" class="content.specreg.SpecRegAction">
+			<result>/socialMap.tiles</result>
+			<result name="admin">/admin/content/specreg/list.jsp</result>
+		</action>
+
+		<action name="SpecInfo" class="content.specreg.SpecRegAction" method="info">
+			<result>/socialMap.tiles</result>
+			<result name="admin">/admin/content/specreg/lnfo.jsp</result>
+		</action>
+
+		<action name="SpecWrite" class="content.specreg.SpecRegAction" method="write">
+			<result type="chain">SpecList</result>
+		</action>
+		
+		<action name="SpecModify" class="content.specreg.SpecRegAction" method="modify">
+			<result>/socialMap.tiles</result>
+		</action>
+		
+		<action name="SpecDelete" class="content.specreg.SpecRegAction" method="delete">
+			<result type="chain">SpecList</result>
+		</action>
+
+		<action name="deleteSpec" class="content.specreg.SpecRegAction" method="delete">
+       	 	<result type="chain">SpecList</result>
+     	</action>
+     	 
+		<!-- Comp -->
+		<action name="CompList" class="content.competition.CompetitionAction">
+			<result type="chain">CompBestlist</result>
+		</action>
+		
+		<action name="CompBestlist" class="content.competition.CompetitionAction" method="best">
+			<result>/socialMap.tiles</result>
+			<result name="admin">/admin/content/competition/List.jsp</result>
+		</action>
+		
+		<action name="CompInfo" class="content.competition.CompetitionAction" method="info">
+			<result>/socialMap.tiles</result>
+			<result name="admin">/admin/content/competition/Info.jsp</result>
+		</action>
+		
+		<action name="CompWrite" class="content.competition.CompetitionAction" method="write">
+			<result>/socialMap.tiles</result>
+			<result>/admin/content/competition/Write.jsp</result>
+		</action>
+		
+		<action name="CompDelete" class="content.competition.CompetitionAction" method="delete">
+			<result type="chain">CompList</result>
+		</action>
+		
+		<action name="CompModify" class="content.competition.CompetitionAction" method="modify">
+			<result>/socialMap.tiles</result>
+			<result>/admin/content/competition/Write.jsp</result>
+		</action>
+		
+	</package>
+	
+	<!-- Msg -->
+	<package name="msg" extends="struts-default" >
+		<action name="MsgList" class="msg.MsgAction">
+			<result>/mypage/Msg/List.jsp</result>
+		</action>
+
+		<action name="MsgWrite" class="msg.MsgAction" method="write">
+			<result type="chain">MsgList</result>
+			<result name="write">/mypage/Msg/Write.jsp</result>
+		</action>
+		
+		<action name="MsgInfo" class="msg.MsgAction" method="info">
+			<result>/mypage/Msg/info.jsp</result>
+		</action>
+		
+		<action name="MsgDelete" class="msg.MsgAction" method="delete">
+        	<result type="chain">MsgList</result>
+     	</action>
+		
+		<!-- 프로젝트 참여 요청 및 참가 신청 쪽 -->
+		<action name="SpecHopeMsg" class="msg.MsgAction" method="spechope">
+			<result>/socialMap.tiles</result>
+		</action>
+		
+		<action name="ProjHopeMsg" class="msg.MsgAction" method="projhope">
+			<result>/socialMap.tiles</result>
+		</action>
+		
+	</package>
+	
+	<package name="rating" extends="struts-default">
+		<action name="RatingList" class="rating.RatingAction">
+			<result>/mypage/Rating/List.jsp</result>
+		</action>
+		
+	
+		<action name="RatingWrite" class="rating.RatingAction" method="write">
+			<result type="chain">RatingList</result>
+			<result name="write">/mypage/Rating/Write.jsp</result>
+		</action>
+		
+		
+	</package>
+	
+	<!-- cust -->
+	<package name="custservice" extends="struts-default">
+		<!-- Qna -->
+		<action name="QnaList" class="custservice.QnaAction">
+			<result>/socialMap.tiles</result>
+			<result name="admin">/admin/custService/qna/List.jsp</result>
+		</action>
+		
+		<action name="QnaInfo" class="custservice.QnaAction" method="info">
+			<result>/socialMap.tiles</result>
+			<result name="admin">/admin/custService/qna/Info.jsp</result>
+		</action>
+		
+		<action name="QnaWrite" class="custservice.QnaAction" method="write">
+			<result>/socialMap.tiles</result>
+			<result name="list" type="chain">QnaList</result>
+		</action>
+		
+		<action name="QnaModify" class="custservice.QnaAction" method="modify">
+			<result>/socialMap.tiles</result>
+			<result name="list" type="chain">QnaList</result>
+		</action>
+		
+		<action name="QnaDelete" class="custservice.QnaAction" method="delete">
+			<result type="chain">QnaList</result>
+		</action>
+		
+		<action name="QnaAdminWrite" class="custservice.QnaAction" method="adminwrite">
+			<result>/admin/custService/qna/Write.jsp</result>
+		</action>
+		
+		<action name="QnaAdminModify" class="custservice.QnaAction" method="adminmodify">
+			<result>/admin/custService/qna/Write.jsp</result>
+		</action>
+		
+		<!-- ASNotice -->
+		<action name="ASList" class="custservice.ASNoticeAction">
+			<result>/socialMap.tiles</result>
+			<result name="admin">/admin/custService/as/List.jsp</result>
+		</action>
+		
+		<action name="ASInfo" class="custservice.ASNoticeAction" method="info">
+			<result>/socialMap.tiles</result>
+			<result name="admin">/admin/custService/as/Info.jsp</result>
+		</action>
+		
+		<action name="ASWrite" class="custservice.ASNoticeAction" method="write">
+			<result>/admin/custService/as/Write.jsp</result>
+		</action>
+		
+		<action name="ASModify" class="custservice.ASNoticeAction" method="modify">
+			<result>/admin/custService/as/Write.jsp</result>
+		</action>
+		
+		<action name="ASDelete" class="custservice.ASNoticeAction" method="delete">
+			<result type="chain">ASList</result>
+		</action>
+		
+		<!-- Faq -->
+		<action name="FAQList" class="custservice.FAQAction">
+			<result>/socialMap.tiles</result>
+			<result name="admin">/admin/custService/faq/List.jsp</result>
+		</action>
+		
+		<action name="FAQInfo" class="custservice.FAQAction" method="info">
+			<result>/socialMap.tiles</result>
+			<result name="admin">/admin/custService/faq/Info.jsp</result>
+		</action>
+		
+		<action name="FAQWrite" class="custservice.FAQAction" method="write">
+			<result>/admin/custService/faq/Write.jsp</result>
+		</action>
+		
+		<action name="FAQModify" class="custservice.FAQAction" method="modify">
+			<result>/admin/custService/faq/Write.jsp</result>
+		</action>
+		
+		<action name="FAQDelete" class="custservice.FAQAction" method="delete">
+			<result type="chain">FAQList</result>
+		</action>
+	</package>
+	
+	<!-- Mypage -->
+	<package name="mypage" extends="struts-default">
+		<action name="MyPage" class="mypage.MyPageAction" method="info">
+			<result>/socialMap.tiles</result>
+		</action>
+		
+		<action name="modifyMemberForm" class="mypage.MyPageAction" method="form">
+			<result>/socialMap.tiles</result>
+		</action>
+		
+		<action name="modifyMember" class="mypage.MyPageAction" method="modify">
+			<result type="chain">MyPage</result>
+		</action>
+		
+		<action name="deleteMemberForm" class="mypage.MyPageAction" method="form">
+			<result>/mypage/favorite/checkPassword.jsp</result>
+		</action>
+
+		<action name="checkPwd" class="mypage.MyPageAction" method="checkPwd">
+			<result>/mypage/favorite/checkSuccess.jsp</result>
+			<result name="error">/mypage/favorite/checkError.jsp</result>
+		</action>
+		
+		<action name="deleteMember" class="mypage.MyPageAction" method="delete">
+			<!-- <result type="chain">/socialMap.tiles</result> -->
+			<result>/socialMap.tiles</result>
+		</action>
+		
+	</package>
+	
+	<!-- favorite -->
+	<package name="favorite" extends="struts-default">
+		<action name="favSpecList" class="favorite.FavoriteAction" method="favspecList">
+			<result>/socialMap.tiles</result>
+		</action>
+		<!-- 팀장일 때 스크랩하기 -->
+		<action name="favSpec" class="favorite.FavoriteAction" method="favSpec">
+			<result type="chain">favSpecList</result>
+			<result name="error">/mypage/favorite/checkError2.jsp</result>
+		</action>
+		<action name="favSpecInfo" class="favorite.FavoriteAction" method="specinfo">
+			<result>/socialMap.tiles</result>
+		</action>
+		<action name="delSpec" class="favorite.FavoriteAction" method="delSpec">
+			<result type="chain">favSpecList</result>
+		</action>
+		
+		<!--프리랜서일때 스크랩한 프로젝트 리스트 보기 -->
+		<action name="favProjList" class="favorite.FavoriteAction" method="favprojList">
+			<result>/socialMap.tiles</result>			
+		</action>
+		<!-- 프리랜서일 때 스크랩하기 -->
+		<action name="favProj" class="favorite.FavoriteAction" method="favProj">
+			<result type="chain">favProjList</result>
+			<result name="error">/mypage/favorite/checkError2.jsp</result>
+		</action>
+		<action name="favProjInfo" class="favorite.FavoriteAction" method="projinfo">
+			<result>/socialMap.tiles</result>
+		</action>
+		<action name="delProj" class="favorite.FavoriteAction" method="delProj">
+			<result type="chain">favProjList</result>
+		</action>
+	</package>
+	
+	<!-- hopelist -->
+	<package name="hopelist" extends="struts-default">
+		<action name="hopeList" class="hopelist.HopeListAction" method="hopeList">
+			<result>/socialMap.tiles</result>			
+		</action>
+		
+		<action name="deleteHopeList" class="hopelist.HopeListAction" method="delete">
+			<result>/socialMap.tiles</result>			
+		</action>
+		
+		<action name="insertTeam" class="hopelist.HopeListAction" method="insertTeam">
+			<result>/socialMap.tiles</result>			
+		</action>
+	</package>
+	
+	<package name="guide" extends="struts-default">
+      <action name="guideHome" class="temp.guideAction">
+         <result>/socialMap.tiles</result>
+      </action>
+      <action name="guideHome1" class="temp.guideAction" method="execute1">
+         <result>/socialMap.tiles</result>
+      </action>
+      <action name="guideHome2" class="temp.guideAction" method="execute2">
+         <result>/socialMap.tiles</result>
+      </action>
+      <action name="guideHome3" class="temp.guideAction" method="execute3">
+         <result>/socialMap.tiles</result>
+      </action>
+   </package>
+	
+</struts>
