@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+<sqlMap namespace="member">
+	<typeAlias alias="member" type="member.MemberVO" />
+
+	<!-- 리절트 맵 정의 -->
+	<resultMap class="member" id="memberRes" >
+		<result property="id" column="id" />
+		<result property="pwd" column="pwd" />
+		<result property="name" column="name" />
+		<result property="gen" column="gen" />
+		<result property="email" column="email" />
+		<result property="birth" column="birth" />
+		<result property="auth" column="auth" />
+		<result property="teamno1" column="teamno1" />
+		<result property="teamno2" column="teamno2" />
+		<result property="teamno3" column="teamno3" />
+		<result property="addr" column="addr" /> 
+		<result property="maj" column="maj" />
+		<result property="exp" column="exp" />
+	</resultMap>
+	
+	<typeAlias alias="utn" type="temp.UpdateTeamnoVO" />
+	<resultMap class="utn" id="utnRes">
+		<result property="id" column="id" />
+		<result property="auth" column="auth" />
+		<result property="teamno1" column="teamno1" />
+	</resultMap>
+	
+	<!-- 로그인 -->
+	<select id="loginMember" resultMap="memberRes" parameterClass="string" >
+		select * from member where id=#id#
+	</select>
+	
+	<insert id="insertMember" parameterClass="member">
+		insert into member (id,pwd,name,gen,birth,email,auth,teamno1,addr,maj,exp)
+		 values (#id#,#pwd#,#name#,#gen#,#birth#,#email#,#auth#,null,#addr#,#maj#,#exp#)
+	</insert>
+	
+	<select id="findIdMember" resultMap="memberRes" parameterClass="member" >
+		select * from member where name=#name# and email=#email#
+	</select>
+	
+	<select id="findPwdMember" resultMap="memberRes" parameterClass="member" >
+		select * from member where id=#id# and email=#email# and birth=#birth#
+	</select>
+	
+	<!-- 마이페이지 -->
+	<update id="updateMember" parameterClass="member">
+		update member set
+		pwd=#pwd#,name=#name#,gen=#gen#,birth=#birth#,email=#email#,addr=#addr#,maj=#maj#,exp=#exp#
+ 		where id=#id#
+	</update>
+	
+	<delete id="deleteMember" parameterClass="member">
+		delete from member where pwd=#pwd#
+	</delete>
+	
+	<select id="checkPwd" parameterClass="member" resultClass="member">
+		select pwd from member where pwd=#pwd# and id=#id#
+	</select>
+	
+	<update id="updateTeamNo" parameterClass="utn">
+		update member set 
+	 	<isEqual property="auth" compareValue="1">
+		 	<isLessThan property="teamno1" compareValue="1">
+		 	 	 teamno1=teamno1+(projectteam_seq.CURRVAL*1)
+			</isLessThan>
+		 	
+		 	<isLessThan property="teamno1" compareValue="10000">
+		 		<isGreaterThan property="teamno1" compareValue="1">
+		 	 		 teamno1=teamno1+(projectteam_seq.CURRVAL*10000)
+		 		</isGreaterThan>
+			 </isLessThan>
+			
+			<isLessThan property="teamno1" compareValue="100000000">
+		 		<isGreaterThan property="teamno1" compareValue="10000">
+		 	 		 teamno1=teamno1+(projectteam_seq.CURRVAL*100000000)
+		 		</isGreaterThan>
+			</isLessThan>
+		</isEqual>
+		
+		<isEqual property="auth" compareValue="2">
+		 	<isLessThan property="teamno1" compareValue="1">
+		 	 	 teamno1=teamno1+#teamno1#*1
+			</isLessThan>
+		 	
+		 	<isLessThan property="teamno1" compareValue="10000">
+		 		<isGreaterThan property="teamno1" compareValue="1">
+		 	 		 teamno1=teamno1+#teamno1#*10000
+		 		</isGreaterThan>
+			 </isLessThan>
+			
+			<isLessThan property="teamno1" compareValue="100000000">
+		 		<isGreaterThan property="teamno1" compareValue="10000">
+		 	 		 teamno1=teamno1+#teamno1#*100000000
+		 		</isGreaterThan>
+			</isLessThan>
+		</isEqual>
+		 where id=#id#
+	</update>
+	
+	
+	<!-- 평점 -->
+	<select id="checkRateDate" parameterClass="String" resultClass="member">
+	<![CDATA[
+		SELECT '1' from dual where 0 < (SELECT sysdate-enddate FROM projectTeam p INNER JOIN member m ON (select teamno1 from member where id=#id#)=p.teamno and m.id=#id#)
+	]]>
+	</select>
+	
+	<select id="ratingMember" resultMap="memberRes" parameterClass="member" >
+		select * from member where teamno1=#teamno1# and not id=#id#
+	</select>
+</sqlMap>

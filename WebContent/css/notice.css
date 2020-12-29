@@ -1,0 +1,67 @@
+@charset "EUC-KR";
+body{font-family: 'Noto Sans KR', sans-serif; color:#3d3d3d; font-size:17px; font-weight:300;}
+body, h1, h2, h3, h4, h5, h6, p, ul, li{margin:0; padding:0;}
+ul, li{list-style:none;}
+a img{border:0;}
+
+.clearfix:after{display:block;clear:both;content:".";visibility:hidden;height:0;}
+.clearfix{display:block;}
+
+.wrap{width: 1200px;}
+
+.contents{padding:90px 0;}
+
+
+.title{height: 120px; background-color: #f5f5ff;}
+.title h2{text-align:left; font-size: 35px; color:#1761a0; padding-top: 33px;}
+
+.sidebox{width: 200px; padding-top:50px; display: inline-block; float: left;}
+.sidebox>h2{background-color: #1b3b7b; color:#fff; display: inline-block; width: 200px; text-align: center; height: 100px; padding-top:70px;}
+.sidebox>ul>li{border-bottom: 1px solid #1761a0; padding:20px 0; text-align: center;}
+.sidebox>ul>li>a{text-decoration: none; color:#1761a0; font-size: 1.5em; font-weight: 400;}
+.sidebox>ul>li>a:hover {font-weight: 800;}
+
+.detailbox{width: 800px; display: inline-block; float: left; padding-top:50px; padding-left: 100px;}
+
+
+.tstyle_list{margin-top:30px;  border-spacing: 0;}
+.board_list  th, .board_list td{border-left:0 none;}
+.tstyle_list th{padding:12px; border-bottom: 2px solid #555; font-size: 18px;}
+.tstyle_list tr td{text-align: center; border-bottom: 1px solid #555; padding: 10px;}
+.tstyle_list tr td>a{text-decoration: none; color:#5d5d5d;}
+.tstyle_list .a:hover{background-color: #f5f5ff;}
+
+
+.write{padding-bottom: 20px;}
+.write>input[type=button]{float:right; display:block; border:1px solid #3d3d3d; background-color: #fff; padding:5px 10px 5px 10px;}
+.write>input[type=button]:hover {background-color: #3d3d3d; color:#fff;}
+
+
+.board_search{text-align: center; padding-top:30px;}
+.board_search select {
+    position: relative;
+    padding: 9px 10px;
+    width: 130px;
+    height: 40px;
+    color: #555;
+    border: 1px solid #dcdbdb;
+    background-color: #fafafa;
+}
+
+.board_search>input[type=submit]{border:1px solid #3d3d3d; background-color: #fff; padding: 9px 10px;}
+.board_search>input[type=submit]:hover {background-color: #3d3d3d; color:#fff;}
+
+.list{background-color: #f5f5ff; font-size: 18px; font-weight: 500; width:30%;}
+
+input[type=submit]{border:1px solid #3d3d3d; background-color: #fff; padding: 9px 10px;}
+input[type=submit]:hover {background-color: #3d3d3d; color:#fff;}
+
+input[type=button]{border:1px solid #3d3d3d; background-color: #fff; padding: 9px 10px;}
+input[type=button]:hover {background-color: #3d3d3d; color:#fff;}
+
+
+
+
+
+
+

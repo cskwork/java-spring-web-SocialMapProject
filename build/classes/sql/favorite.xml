@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC '-//ibatis.apache.org//DTD Sql Map 2.0//EN' 'http://ibatis.apache.org/dtd/sql-map-2.dtd'>
+
+<sqlMap namespace="favorite">
+	<typeAlias alias="favorite" type="favorite.FavoriteVO"/>
+	<resultMap id="favoriteRes" class="favorite">
+		<result property="artlog" column="artlog"/>
+		<result property="teamno" column="teamno"/>
+		<result property="comp" column="comp"/>
+		<result property="id" column="id"/>
+		<result property="leaderid" column="leaderid"/>
+ 	</resultMap>
+ 	
+	<typeAlias alias="project" type="content.project.ProjectTeamVO"/>
+ 	<resultMap id="projectRes" class="project">
+ 		<result property="leaderid" column="Leaderid"/>
+		<result property="teamno" column="teamno"/>
+		<result property="title" column="title"/>
+		<result property="startdate" column="startdate"/>
+		<result property="enddate" column="enddate"/>
+		<result property="recmem" column="recmem"/>
+		<result property="maj" column="maj"/>
+		<result property="cont" column="cont"/>
+		<result property="currmem" column="currmem"/>
+		<result property="loc" column="loc"/>
+		<result property="sal" column="sal"/>
+ 	</resultMap> 
+ 	
+ 	<typeAlias alias="specreg" type="content.specreg.SpecRegVO"/>
+ 	<resultMap id="specregRes" class="specreg">
+ 		<result property="id" column="id"/>
+		<result property="regdate" column="regdate"/>
+		<result property="exp" column="exp"/>
+		<result property="maj" column="maj"/>
+		<result property="addr" column="addr"/>
+		<result property="contadd" column="contadd"/>
+		<result property="showlog" column="showlog"/>
+ 	</resultMap> 
+ 	
+	<!-- spec -->
+ 	<select id="selectFavSpec" resultMap="specregRes" parameterClass="string">
+ 		select * from specreg s Join favoritelist fl on s.id=fl.id where artlog='1' and leaderid=#leaderid#
+ 	</select>
+ 	
+ 	<insert id="insertFavSpec" parameterClass="favorite" >
+ 		insert into favoritelist(artlog, id, leaderid)
+		select 1, #id#, #leaderid# from dual where 0 = (select count(*) from favoritelist where id = #id# and leaderid = #leaderid#)
+ 	</insert>
+ 	
+ 	<select id="checkinsertFavSpec" parameterClass="favorite" resultMap="favoriteRes">
+ 		select * from favoritelist where id = #id# and leaderid = #leaderid#
+ 	</select>
+  	
+ 	<delete id="deleteFavSpec" parameterClass="favorite">
+ 		delete from favoritelist where id=#id# and artlog=1 and leaderid=#leaderid#
+ 	</delete>
+ 	
+ 	<!-- proj -->
+ 	<select id="selectFavProj" resultMap="projectRes" parameterClass="string">
+ 		select * from projectteam p Join favoritelist fl on p.teamno=fl.teamno where artlog='0' and id=#id#
+ 	</select>
+ 	
+ 	<insert id="insertFavProj" parameterClass="favorite" >
+ 		insert into favoritelist(artlog, teamno, id)
+		select 0, #teamno#, #id# from dual where 0 = (select count(*) from favoritelist where teamno = #teamno# and id = #id#)
+ 	</insert>
+ 	
+ 	<select id="checkinsertFavProj" parameterClass="favorite" resultMap="favoriteRes">
+ 		select * from favoritelist where teamno = #teamno# and id = #id#
+ 	</select>
+ 	
+ 	<delete id="deleteFavProj" parameterClass="favorite">
+ 		delete from favoritelist where teamno=#teamno# and artlog=0
+ 	</delete>
+</sqlMap>  
+
+
