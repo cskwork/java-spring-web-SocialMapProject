@@ -12,6 +12,16 @@ colors:
   error: '#a32b39'
   field: '#aaa3bb'
   focus: '#7958b5'
+  open-tint: '#e9e1f6'
+  open-ink: '#40236f'
+  closed-tint: '#f3e9eb'
+  closed-ink: '#852a36'
+  done-tint: '#e3efe9'
+  done-ink: '#1f5a40'
+  chip: '#efedf4'
+  chip-ink: '#3c3650'
+  pill-line: '#cfc6e0'
+  panel: '#f7f6fa'
 typography:
   title:
     fontFamily: '"Noto Sans KR", "Apple SD Gothic Neo", sans-serif'
@@ -21,9 +31,37 @@ typography:
     fontFamily: '"Noto Sans KR", "Apple SD Gothic Neo", sans-serif'
     fontSize: 15px
     lineHeight: 1.65
+  home-title:
+    fontSize: 30px
+  page-title-narrow:
+    fontSize: 24px
+  stat:
+    fontSize: 22px
+  section:
+    fontSize: 20px
+  section-small:
+    fontSize: 19px
+  card-title:
+    fontSize: 18px
+  track-title:
+    fontSize: 17px
+  lead:
+    fontSize: 16px
+  small:
+    fontSize: 14px
+  meta:
+    fontSize: 13px
+  chip:
+    fontSize: 12.5px
+  caption:
+    fontSize: 12px
+  micro:
+    fontSize: 11px
 rounded:
   control: 8px
   surface: 8px
+  chip: 4px
+  pill: 999px
 spacing:
   field: 12px
   group: 16px
@@ -54,7 +92,7 @@ White work surfaces, a pale violet sidebar and deep violet actions organize recr
 
 The original EUC-KR JSP/Struts templates supply native presentation. UTF-8 static conversion and new compatibility actions supply the synthetic demo. The shared desk stylesheet is identical to demo.css at this review; preserve EUC-KR bytes when editing JSP files.
 
-Evidence: [WebContent/css/desk.css](WebContent/css/desk.css) and [portfolio-demo/src/demo.css](portfolio-demo/src/demo.css). This document records the implemented cascade on 2026-09-26. Browser control, rendering and screenshots were excluded by the user; visual layout, screen-reader output and real keyboard behavior remain unverified.
+Evidence: [WebContent/css/desk.css](WebContent/css/desk.css) and [portfolio-demo/src/demo.css](portfolio-demo/src/demo.css). This document records the implemented cascade on 2026-09-26. The 2026-09-26 recruitment refresh was written without browser access; root performs the rendered desktop/mobile review. Screen-reader output and real keyboard behavior remain unverified until then.
 
 ## Colors
 
@@ -83,6 +121,11 @@ Controls use 8px corners; supporting surfaces use 8px. Rows use a bottom divider
 - Navigation: preserve the current-state indication and native links.
 - Records: use separators and concrete status text. Empty content has an explicit message.
 - Responsive and reduced-motion rules remain in the source stylesheet.
+- Home: heading and search share one row; a pale-violet pulse sentence states open projects and open seats from stored projects, followed by region pills linking to `ProjList.action?loc=`; featured project entries show place · competition, a two-line description from `cont`, and a facts row (찾는 전공, 인원 현재/추가, 기간). Logged-in work panel shows received/sent application counts and the current project; visitors see guidance only.
+- Project detail: status chip (모집 중 · 추가 N명 violet, 모집 마감/해산 red, 완료 green), competition chip and leader; description with preserved line breaks beside a grey conditions panel (dl) that holds the original action buttons.
+- My project: original table plus a numbered lifecycle track (모집 등록/참여 신청 → 수락/합류 → 모집 중 or 마감 → 완료 → 팀원 평가) chosen from the project's status; vertical below 680px.
+- Received applications add 신청일 and 전공 · 경력 from the sender's member record.
+- Chips: 4px radius, 13px/650. Region pills: 999px radius, white on the pulse band.
 
 The companion [.impeccable/design.json](.impeccable/design.json) contains 6 isolated HTML/CSS samples of these implemented patterns. They are illustrative samples, not live application controls.
 

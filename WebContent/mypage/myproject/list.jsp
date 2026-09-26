@@ -102,6 +102,15 @@
 			   </tr>
 			</s:iterator>
 			 </table>
+			 <s:iterator value="list">
+			 <section class="sm-track">
+			  <h3><s:property value="title" /> 진행 단계</h3>
+			  <s:if test="status == 'completed'"><ol class="sm-steps"><li class="done"><s:if test="#session.auth == 1">모집 등록</s:if><s:else>참여 신청</s:else></li><li class="done"><s:if test="#session.auth == 1">팀원 수락</s:if><s:else>팀 합류</s:else></li><li class="done">모집 마감</li><li class="done">프로젝트 완료</li><li class="current">팀원 평가 <a href="RatingList.action">평점 보기</a></li></ol></s:if>
+			  <s:elseif test="status == 'released'"><ol class="sm-steps"><li class="done"><s:if test="#session.auth == 1">모집 등록</s:if><s:else>참여 신청</s:else></li><li class="done"><s:if test="#session.auth == 1">팀원 수락</s:if><s:else>팀 합류</s:else></li><li class="current">해산됨</li></ol></s:elseif>
+			  <s:elseif test="status == 'closed' || recmem <= 0"><ol class="sm-steps"><li class="done"><s:if test="#session.auth == 1">모집 등록</s:if><s:else>참여 신청</s:else></li><li class="done"><s:if test="#session.auth == 1">팀원 수락</s:if><s:else>팀 합류</s:else></li><li class="current">모집 마감 · <s:property value="currmem" />명 확정</li><li>프로젝트 완료</li><li>팀원 평가</li></ol></s:elseif>
+			  <s:else><ol class="sm-steps"><li class="done"><s:if test="#session.auth == 1">모집 등록</s:if><s:else>참여 신청</s:else></li><li class="done"><s:if test="#session.auth == 1">팀원 수락</s:if><s:else>팀 합류</s:else></li><li class="current">모집 중 · 추가 <s:property value="recmem" />명</li><li>모집 마감</li><li>프로젝트 완료</li><li>팀원 평가</li></ol></s:else>
+			 </section>
+			 </s:iterator>
 	  </div>
    </div>
 </div>

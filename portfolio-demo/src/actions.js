@@ -29,6 +29,19 @@ const projectOfLeader = (ctx, leaderid) => ctx.state.projectteam.find((p) => p.l
 const redirect = (action, alert, params = []) => ({ redirect: { action, params }, alert });
 const needLogin = () => redirect('Login', '로그인이 필요합니다. 아래 데모 계정으로 로그인해 보세요.');
 const featuredProjects = (ctx) => [...ctx.state.projectteam].filter((p) => Number(p.recmem) > 0).sort((a, b) => Number(b.teamno) - Number(a.teamno)).slice(0, 3);
+// Home summaries come from stored projects/applications only; nothing is estimated.
+const openSummary = (ctx) => {
+  const open = ctx.state.projectteam.filter((p) => Number(p.recmem) > 0 && !['closed', 'completed', 'released'].includes(p.status));
+  const regions = [...open.reduce((m, p) => m.set(p.loc, (m.get(p.loc) || 0) + 1), new Map())].map(([loc, count]) => ({ loc, count })).sort((a, b) => b.count - a.count || a.loc.localeCompare(b.loc));
+  return { projects: open.length, seats: open.reduce((a, p) => a + Number(p.recmem), 0), regions };
+};
+const workSummary = (ctx) => {
+  const user = me(ctx);
+  if (!user) return null;
+  const project = filled(user.teamno1) ? projectOf(ctx, user.teamno1) : null;
+  return { received: ctx.state.hopelist.filter((h) => h.getid === user.id).length, sent: ctx.state.hopelist.filter((h) => h.sendid === user.id).length, project: project && { title: project.title, teamno: project.teamno } };
+};
+const homeModel = (ctx) => ({ ...base(ctx, 'main'), checkdate: 0, featuredProjects: featuredProjects(ctx), openSummary: openSummary(ctx), work: workSummary(ctx) });
 const nextSeq = (ctx, table) => { const n = ctx.state.seq[table]; ctx.state.seq[table] = n + 1; return n; };
 
 function projectInput(p) {
@@ -103,7 +116,7 @@ function specView(spec) {
 }
 
 function hopeListModel(ctx) {
-  const list = ctx.state.hopelist.filter((h) => h.getid === ctx.state.session.id);
+  const list = ctx.state.hopelist.filter((h) => h.getid === ctx.state.session.id).map((h) => { const sender = ctx.state.member.find((m) => m.id === h.sendid); return { ...h, sendername: sender?.name ?? '', sendermaj: sender?.maj ?? '', senderexp: sender?.exp ?? '' }; });
   return { ...base(ctx, 'hopelist'), ...listModel(ctx, list, 'hopeList', []) };
 }
 
@@ -122,7 +135,7 @@ function toggleFavorites(ctx, { artlog, ids, key, owner }) {
 export const ACTIONS = {
   // ---------- member.MemberAction ----------
   SocialMap(ctx) {
-    return { model: { ...base(ctx, 'main'), checkdate: 0, featuredProjects: featuredProjects(ctx) } };
+    return { model: homeModel(ctx) };
   },
   Login(ctx) {
     const p = ctx.params;
@@ -133,7 +146,7 @@ export const ACTIONS = {
     if (!found) return { model: { ...base(ctx, 'login'), check: '3' } };
     if (found.pwd !== String(one(p.pwd) ?? '')) return { model: { ...base(ctx, 'login'), id: '', check: '2' } };
     ctx.state.session = { id: found.id, name: found.name, auth: found.auth, expiresAt: ctx.now.getTime() + 3600000 };
-    return { model: { ...base(ctx, 'main'), checkdate: 0, featuredProjects: featuredProjects(ctx) }, mutated: true, landing: 'SocialMap', notice: `${found.name}(${found.id}) 계정으로 로그인했습니다.` };
+    return { model: homeModel(ctx), mutated: true, landing: 'SocialMap', notice: `${found.name}(${found.id}) 계정으로 로그인했습니다.` };
   },
   Logout(ctx) {
     ctx.state.session = {};
