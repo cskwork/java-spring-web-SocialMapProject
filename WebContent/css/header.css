@@ -83,3 +83,46 @@ table{border-spacing: 0;}
 }
 
 
+
+/* Recruitment discovery: shared by the original JSP and the static demo. */
+.sm-home { padding: 110px 0 48px; background: #f7f9fc; }
+.sm-home h2 { color: #173d63; font-size: 36px; line-height: 1.3; max-width: 760px; }
+.sm-intro { margin: 18px 0 24px; font-size: 18px; line-height: 1.6; color: #34495e; }
+.sm-home-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-bottom: 44px; }
+.sm-home-actions .button-style1 { margin: 0; padding: 14px 20px; background: #1761a0; color: #fff; text-decoration: none; }
+.sm-home h3 { font-size: 24px; margin: 24px 0 8px; }
+.sm-featured { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px; margin: 16px 0 24px; }
+.sm-featured article { padding: 24px 0; border-top: 1px solid #a7bed0; }
+.sm-featured h4 { font-size: 21px; margin: 0 0 14px; line-height: 1.4; }
+.sm-featured p { line-height: 1.7; margin: 6px 0; color: #34495e; }
+.sm-project-search { margin: 32px 0 20px; padding: 24px; background: #f3f7fb; border: 1px solid #b6c8d8; }
+.sm-search-line { display: flex; flex-wrap: wrap; align-items: end; gap: 16px; }
+.sm-search-line label { display: flex; flex-direction: column; gap: 8px; font-size: 15px; color: #263c50; }
+.sm-search-line input,.sm-search-line select,.sm-search-line button { min-height: 44px; padding: 8px 12px; font: inherit; border: 1px solid #8a9cae; background: white; color: #173d63; }
+.sm-query { flex: 1; min-width: 180px; }
+.sm-search-line button { background: #1761a0; color: white; cursor: pointer; }
+.sm-search-line a { line-height: 44px; }
+.sm-filters { margin-top: 20px; }
+.sm-filters summary { cursor: pointer; padding: 8px 0; }
+.sm-filters p { font-size: 14px; margin: 10px 0; line-height: 1.6; }
+.sm-results { margin: 16px 0; line-height: 1.6; }
+.sm-project-list { margin-top: 12px; }
+.sm-project-list .list td { font-size: 15px; line-height: 1.6; padding: 16px 8px; }
+.sm-project-list .sm-project-name a { font-size: 18px; text-decoration: underline; text-underline-offset: 4px; }
+@media(max-width:760px) {
+ .sm-home { padding: 90px 0 32px; }
+ .sm-home h2 { font-size: 28px; }
+ .sm-featured { display: block; }
+ .sm-featured article { margin-bottom: 16px; }
+ .sm-project-search { padding: 16px; margin-top: 20px; }
+ .sm-search-line { display: grid; grid-template-columns: 1fr; }
+ .sm-search-line label,.sm-search-line input,.sm-search-line select { width: 100%; min-width: 0; }
+ .sm-project-list,.sm-project-list tbody { display: block; width: 100%; overflow: visible; }
+ .sm-project-list .list_title { display: none; }
+ .sm-project-list tr.list { display: flex; flex-direction: column; margin-bottom: 20px; padding: 16px; border: 1px solid #b6c8d8; }
+ .sm-project-list tr.list td { display: block; width: auto; padding: 5px 0; border: 0; white-space: normal; text-align: left; overflow-wrap: anywhere; }
+ .sm-project-list tr.list td::before { content: attr(data-label); display: inline-block; min-width: 94px; color: #485f73; font-size: 14px; }
+ .sm-project-list tr.list td.sm-project-name { order: -1; padding-bottom: 14px; }
+ .sm-project-list tr.list td.sm-project-name::before { display: none; }
+ .sm-project-list tr.list input[type=checkbox] { width: 20px; height: 20px; vertical-align: middle; }
+}

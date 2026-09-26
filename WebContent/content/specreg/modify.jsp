@@ -10,13 +10,9 @@
 	<link rel="stylesheet" href="css/write.css">
 	<script type="text/javascript">
 		function validation() {
-			var frm = document.forms(0);
-			if(frm.title.value == "") {
-				alert("제목을 입력해주세요");
-				return false;
-			}
-			else if(frm.cont.value == "") {
-				alert("내용을 입력해주세요");
+			var frm = document.userinput;
+			if(frm.exp.value == "") {
+				alert("기존이력을 입력해주세요");
 				return false;
 			}
 			return true;
@@ -27,7 +23,7 @@
 <div class="contents clearfix">
 	<div class="title">
 		<div class="wrap">
-			<h2>프로젝트 수정하기</h2>
+			<h2>스펙정보 수정하기</h2>
 		</div>
 	</div>
 		<div class="wrap">
@@ -35,7 +31,7 @@
 				<script type="text/javascript">location.href="SpecList.action";</script>
 			</s:if>
 			<s:else>
-				<form action="SpecModify.action" method="post" enctype="multipart/form-data" onsubmit="return validation();">
+				<form action="SpecModify.action" method="post" name="userinput" enctype="multipart/form-data" onsubmit="return validation();">
 					<table class="writetable">
 						<tr>
 							<td class="list">ID</td>
@@ -59,7 +55,7 @@
 						<tr>
 						<tr>
 							<td class="list">공개여부</td>
-							<td class="input"><input type="text" name="showlog" maxlength="2" value="<s:property value='resultClass.showlog'/>"></td>
+							<td class="input"><input type="checkbox" name="showlog" value="true" <s:if test="resultClass.showlog == 1">checked="checked"</s:if>/> 공개</td>
 						</tr>
 				
 						

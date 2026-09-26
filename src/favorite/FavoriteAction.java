@@ -56,9 +56,7 @@ public class FavoriteAction extends ActionSupport {
 	private String auth;
 
 	public FavoriteAction() throws Exception {
-		reader = Resources.getResourceAsReader("sqlMapConfig.xml");
-		sqlMapper = SqlMapClientBuilder.buildSqlMapClient(reader);
-		reader.close();
+		sqlMapper = security.Database.client();
 	}
 
 	public String favspecList() throws Exception {
@@ -227,7 +225,9 @@ public class FavoriteAction extends ActionSupport {
 	public String delProj() throws Exception {
 		fparamClass = new FavoriteVO();
 
-		/* fparamClass.setId(getId()); */
+		ActionContext context = ActionContext.getContext();
+		Map<String, String> session = (Map<String, String>) context.getSession();
+		fparamClass.setId(session.get("id"));
 		fparamClass.setTeamno(getTeamno());
 
 		sqlMapper.delete("favorite.deleteFavProj", fparamClass);

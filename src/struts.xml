@@ -112,19 +112,13 @@
 			<result name="admin">/admin/content/competition/Info.jsp</result>
 		</action>
 		
-		<action name="CompWrite" class="content.competition.CompetitionAction" method="write">
-			<result>/socialMap.tiles</result>
-			<result>/admin/content/competition/Write.jsp</result>
-		</action>
+		<action name="CompWrite" class="content.competition.CompetitionAction" method="write"><result>/compat/manage.jsp</result><result name="list" type="chain">CompList</result></action>
 		
 		<action name="CompDelete" class="content.competition.CompetitionAction" method="delete">
 			<result type="chain">CompList</result>
 		</action>
 		
-		<action name="CompModify" class="content.competition.CompetitionAction" method="modify">
-			<result>/socialMap.tiles</result>
-			<result>/admin/content/competition/Write.jsp</result>
-		</action>
+		<action name="CompModify" class="content.competition.CompetitionAction" method="modify"><result>/compat/manage.jsp</result><result name="list" type="chain">CompList</result></action>
 		
 	</package>
 	
@@ -348,4 +342,5 @@
       </action>
    </package>
 	
+<package name="compatibility" extends="struts-default"><action name="ResetPassword" class="compat.CompatibilityAction" method="reset"><result>/socialMap.tiles</result></action><action name="SessionExpire" class="compat.CompatibilityAction" method="expire"><result>/socialMap.tiles</result></action><action name="AdminHome" class="compat.CompatibilityAction" method="admin"><result>/socialMap.tiles</result></action><action name="ProjLifecycle" class="compat.CompatibilityAction" method="lifecycle"><result>/socialMap.tiles</result></action></package>
 </struts>

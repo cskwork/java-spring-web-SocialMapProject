@@ -76,9 +76,7 @@ public class ProjectTeamAction extends ActionSupport {
 	private String leaderid;
 
 	public ProjectTeamAction() throws IOException, SQLException {
-		reader = Resources.getResourceAsReader("sqlMapConfig.xml"); // sqlMapConfig.xml 파일의 설정내용을 가져온다.
-		sqlMapper = SqlMapClientBuilder.buildSqlMapClient(reader); // sqlMapConfig.xml의 내용을 적용한 sqlMapper 객체 생성.
-		reader.close();
+		sqlMapper = security.Database.client();
 		
 		
 		/*필터 관련*/
@@ -176,7 +174,7 @@ public class ProjectTeamAction extends ActionSupport {
 		} else {
 			setId(session.get("id"));
 			setName(session.get("name"));
-			setAuth(Integer.parseInt(session.get("auth")));
+			setAuth(session.get("auth") == null ? -1 : Integer.parseInt(session.get("auth")));
 			
 			System.out.println("로그인 아이디 : " + getId());
 			System.out.println("선택한 글 아이디 : " + leaderid);
@@ -271,6 +269,9 @@ public class ProjectTeamAction extends ActionSupport {
 			Date end = format.parse(getEnddate() + " 23:59:59");
 
 			paramClass = new ProjectTeamVO();
+			ProjectTeamVO before = (ProjectTeamVO) sqlMapper.queryForObject("content.selectProj", Integer.parseInt(getTeamno()));
+			paramClass.setTeamno(getTeamno());
+			paramClass.setCurrmem(before.getCurrmem());
 			paramClass.setLeaderid(session.get("id"));
 			paramClass.setTitle(getTitle());
 			paramClass.setComp(getComp());
@@ -290,10 +291,11 @@ public class ProjectTeamAction extends ActionSupport {
 
 	public String delete() throws Exception {
 		paramClass = new ProjectTeamVO();
-		paramClass.setLeaderid(getLeaderid());
+		paramClass.setLeaderid(((ProjectTeamVO)sqlMapper.queryForObject("content.selectProj",Integer.parseInt(getTeamno()))).getLeaderid());
 		paramClass.setTeamno(getTeamno());
 
-		sqlMapper.delete("content.deleteProj", paramClass);
+		security.Service.lifecycle((String)ActionContext.getContext().getSession().get("id"), "0".equals(ActionContext.getContext().getSession().get("auth")), getTeamno(), "released");
+        sqlMapper.delete("content.deleteProj", paramClass);
 
 		return SUCCESS;
 	}
@@ -310,9 +312,10 @@ public class ProjectTeamAction extends ActionSupport {
 	      
 	      System.out.println(tempClass1.getTeamno1());
 	      
-	      resultClass = (ProjectTeamVO) sqlMapper.queryForObject("content.selectProj", Integer.parseInt(teamno));
-	      
-	      list.add(resultClass);
+	      if (!(teamno == null || teamno.equals("") || teamno.equals("0"))) {
+		resultClass = (ProjectTeamVO) sqlMapper.queryForObject("content.selectProj", Integer.parseInt(teamno));
+		list.add(resultClass);
+	      }
 
 	      setMainpage("myprojlist");
 	      return SUCCESS;

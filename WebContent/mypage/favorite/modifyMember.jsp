@@ -11,7 +11,7 @@
 </head>
 <script>
 	function checkIt() {
-        var userinput = eval("document.userinput");
+        var userinput = document.userinput;
         
         if(!userinput.pwd.value ) {
             alert("비밀번호를 입력하세요");
@@ -97,6 +97,10 @@
 				<tr>
 					<td class="list">비밀번호</td>
 					<td><s:textfield name="pwd" theme="simple" value="%{resultClass.pwd}" maxlength="30" cssStyle="width: 100%; height: 25px;"/></td>
+				</tr>
+				<tr>
+					<td class="list">비밀번호 확인</td>
+					<td><s:password name="pwd2" theme="simple" maxlength="30" cssStyle="width: 100%; height: 25px;"/></td>
 				</tr>
 				<tr>
 					<td class="list">주민등록 번호</td>

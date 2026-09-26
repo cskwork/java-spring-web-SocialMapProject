@@ -32,6 +32,7 @@ public class MsgAction extends ActionSupport {
 	private String sendid; // 쓰기와 공용
 	private String getid; // 쓰기와 공용
 	private String id;
+    private String box; public void setBox(String value){box=value;} public String getBox(){return box;}
 
 	private int check = 0;
 	private PagingAction page;
@@ -53,9 +54,7 @@ public class MsgAction extends ActionSupport {
 	private String mainpage;
 
 	public MsgAction() throws IOException {
-		reader = Resources.getResourceAsReader("sqlMapConfig.xml"); // sqlMapConfig.xml 파일의 설정내용을 가져온다.
-		sqlMapper = SqlMapClientBuilder.buildSqlMapClient(reader); // sqlMapConfig.xml의 내용을 적용한 sqlMapper 객체 생성.
-		reader.close();
+		sqlMapper = security.Database.client();
 	}
 
 	@Override
@@ -65,7 +64,7 @@ public class MsgAction extends ActionSupport {
 
 		paramClass = new MsgVO();
 
-		if (getSendid() == null || getSendid().equals("")) {
+		if (!"sent".equals(box)) {
 			paramClass.setGetid(session.get("id"));
 		} else {
 			paramClass.setSendid(session.get("id"));
@@ -97,98 +96,35 @@ public class MsgAction extends ActionSupport {
 			return "write";
 		} else {
 			paramClass = new MsgVO();
-			paramClass.setSendid(getSendid());
+			paramClass.setSendid((String)ActionContext.getContext().getSession().get("id"));
 			paramClass.setGetid(getGetid());
 			paramClass.setTitle(getTitle());
 			paramClass.setCont(getCont());
 			paramClass.setSendtime(new Timestamp(System.currentTimeMillis()));
 
-			sqlMapper.insert("msg.MsgWrite", paramClass);
+			security.Service.require(getTitle()!=null && getTitle().trim().length()>0 && getCont()!=null && getCont().trim().length()>0 && getCont().length()<=2000,"Invalid message");
+            security.Service.message(paramClass.getSendid(),getGetid(),getTitle(),getCont());
 			
 			return SUCCESS;
 		}
 	}
 	
-	public String delete() throws Exception {
-	      paramClass = new MsgVO();
-	      paramClass.setNo(getNo());
-	      
-	      System.out.println("--삭제할 메세지 No:"+getNo());
-	      
-	      sqlMapper.delete("msg.MsgDelete",paramClass);
-	      
-	      return SUCCESS;
-	   }
-
-	public String info() throws Exception {
-		setCheck(getCheck());
-
-		resultClass = (MsgVO) sqlMapper.queryForObject("msg.MsgInfo", getNo());
-		return SUCCESS;
-	}
-	
-	public String spechope() throws Exception {	
-		ActionContext context = ActionContext.getContext();
-		Map<String, String> session = (Map<String, String>) context.getSession();
-		
-		paramClass = new MsgVO();
-		paramClass.setSendid(session.get("id")); // 로그인 세션 아이디
-		paramClass.setGetid(getid); // 스펙에서 선택한 아이디
-		paramClass.setTitle("우리 프로젝트에 참여 해주시길 희망합니다.");
-		paramClass.setCont("저희 프로젝트에 참여해 주길 희망합니다. 마이페이지에서 수락 여부를 선택해주세요.");
-		paramClass.setSendtime(new Timestamp(System.currentTimeMillis()));
-
-		//알림쪽지 발송
-		sqlMapper.insert("msg.MsgWrite", paramClass);
-		
-		//마이페이지 - 프로젝트 수락 여부 추가
-		paramClass2 = new HopeListVO();
-		
-		paramClass2.setSendid(session.get("id")); // 로그인 세션 아이디
-		paramClass2.setGetid(getid); // 스펙에서 선택한 아이디
-		paramClass2.setRegdate(new Timestamp(System.currentTimeMillis()));
-		paramClass2.setLog(0); // 0이면 팀장이 팀원에게 제안
-		
-		sqlMapper.insert("hopelist.insertHopeList", paramClass2);
-		
-		setMainpage("sendcomplete");
-		
-		return SUCCESS;
-	}
-	
-	public String projhope() throws Exception {	
-		ActionContext context = ActionContext.getContext();
-		Map<String, String> session = (Map<String, String>) context.getSession();
-		
-		//System.out.println("------" + getid);
-		//System.out.println("------" + session.get("id"));
-		
-		paramClass = new MsgVO();
-		paramClass.setSendid(session.get("id")); // 로그인 세션 아이디
-		paramClass.setGetid(getid); // 선택한 프로젝트 팀장 아이디
-		paramClass.setTitle("프로젝트에 참여를 희망합니다.");
-		paramClass.setCont("마이페이지에서 수락 여부를 선택해주세요.");
-		paramClass.setSendtime(new Timestamp(System.currentTimeMillis()));
-		
-		//System.out.println("----------------");
-
-		//알림쪽지 발송
-		sqlMapper.insert("msg.MsgWrite", paramClass);
-		
-		//마이페이지 - 프로젝트 수락 여부 추가
-		paramClass2 = new HopeListVO();
-		
-		paramClass2.setSendid(session.get("id")); // 로그인 세션 아이디
-		paramClass2.setGetid(getid); // 스펙에서 선택한 아이디
-		paramClass2.setRegdate(new Timestamp(System.currentTimeMillis()));
-		paramClass2.setLog(1); // 0이면 팀장이 팀원에게 제안
-		
-		sqlMapper.insert("hopelist.insertHopeList", paramClass2);
-		
-		setMainpage("projlist");
-		
-		return SUCCESS;
-	}
+ public String delete() throws Exception {
+  String actor=(String)ActionContext.getContext().getSession().get("id");
+  java.util.Map row=security.Service.one("select * from msg where no=? and (sendid=? or getid=?)",no,actor,actor);
+  security.Service.require(row!=null,"Message ownership required");
+  if(security.Service.one("select no from message_deleted where no=? and id=?",no,actor)==null)security.Service.update("insert into message_deleted(no,id) values(?,?)",no,actor);
+  return SUCCESS;
+ }
+ public String info() throws Exception {
+  String actor=(String)ActionContext.getContext().getSession().get("id");
+  resultClass=(MsgVO)sqlMapper.queryForObject("msg.MsgInfo",getNo());
+  security.Service.require(resultClass!=null&&(actor.equals(resultClass.getSendid())||actor.equals(resultClass.getGetid())),"Message ownership required");
+  security.Service.require(security.Service.one("select no from message_deleted where no=? and id=?",no,actor)==null,"Message deleted");
+  security.Service.update("update msg set read_at=CURRENT_TIMESTAMP where no=? and getid=?",no,actor);return SUCCESS;
+ }
+ public String spechope() throws Exception {security.Service.hope((String)ActionContext.getContext().getSession().get("id"),getid,0);setMainpage("sendcomplete");return SUCCESS;}
+ public String projhope() throws Exception {security.Service.hope((String)ActionContext.getContext().getSession().get("id"),getid,1);setMainpage("sendcomplete");return SUCCESS;}
 
 	public int getNo() {
 		return no;

@@ -54,9 +54,7 @@ public class QnaAction extends ActionSupport {
 	private QnaVO resultClass2;
 
 	public QnaAction() throws IOException {
-		reader = Resources.getResourceAsReader("sqlMapConfig.xml");
-		sqlMapper = SqlMapClientBuilder.buildSqlMapClient(reader);
-		reader.close();
+		sqlMapper = security.Database.client();
 	}
 
 	@Override
@@ -81,7 +79,8 @@ public class QnaAction extends ActionSupport {
 			}
 			
 			//∆‰¿Ã¬°
-			totalCount = list.size();
+			if (!"0".equals(session.get("auth"))) { java.util.Iterator<QnaVO> rows=list.iterator(); while(rows.hasNext()) if(!session.get("id").equals(rows.next().getId())) rows.remove(); }
+        totalCount = list.size();
 
 			page = new PagingAction(currentPage, totalCount, blockCount, blockPage, searchnum, "QnaList", getSearch());
 			pagingHtml = page.getPagingHtml().toString();
@@ -111,7 +110,8 @@ public class QnaAction extends ActionSupport {
 			}
 			
 			//∆‰¿Ã¬°
-			totalCount = list.size();
+			if (!"0".equals(session.get("auth"))) { java.util.Iterator<QnaVO> rows=list.iterator(); while(rows.hasNext()) if(!session.get("id").equals(rows.next().getId())) rows.remove(); }
+        totalCount = list.size();
 
 			page = new PagingAction(currentPage, totalCount, blockCount, blockPage, searchnum, "QnaList", getSearch());
 			pagingHtml = page.getPagingHtml().toString();

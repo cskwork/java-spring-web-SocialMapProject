@@ -9,7 +9,7 @@
 	<script type="text/javascript" src="js/jquery-1.12.4.min.js" ></script>
 	<link rel="stylesheet" href="css/write.css" />
 <script type="text/javascript"></script>
-</head>
+<link rel="stylesheet" href="css/desk.css" /><meta name="csrf-token" content="<s:property value="#session.csrf"/>"><script src="js/native-forms.js" defer></script></head>
 <body>
 <div class="contents clearfix">
 	<div class="title">

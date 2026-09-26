@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-26T08:54:42.061161+00:00",
+  "title": "Design System: SocialMap",
+  "extensions": {
+    "shadows": [
+      {
+        "name": "toast",
+        "value": "0 8px 24px #24213224",
+        "purpose": "Temporary feedback toast only."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-transition",
+        "value": "160ms ease-out",
+        "purpose": "Existing button color feedback; disabled for reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "max-1000px",
+        "value": "1000px"
+      },
+      {
+        "name": "max-900px",
+        "value": "900px"
+      },
+      {
+        "name": "max-680px",
+        "value": "680px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "description": "Extracted from WebContent/css/desk.css.",
+      "html": "<button class=\"ds-primary\" type=\"button\">저장</button>",
+      "css": ".ds-primary{font:15px/1.65 \"Noto Sans KR\", \"Apple SD Gothic Neo\", sans-serif;background:var(--action,#543391);color:#fff;border:1px solid var(--action,#543391);border-radius:8px;padding:10px 16px;min-height:44px;cursor:pointer;transition:background 160ms ease-out;}.ds-primary:hover{background:#412573;}.ds-primary:focus-visible{outline:3px solid #7958b5;outline-offset:3px;}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none;}}",
+      "refersTo": "button-primary"
+    },
+    {
+      "name": "Text field",
+      "kind": "input",
+      "description": "Extracted from WebContent/css/desk.css.",
+      "html": "<label class=\"ds-label\">검색어<input class=\"ds-input\" type=\"text\" placeholder=\"검색어 입력\"></label>",
+      "css": ".ds-label{font:15px/1.65 \"Noto Sans KR\", \"Apple SD Gothic Neo\", sans-serif;display:block;font-weight:600;color:var(--ink,#242132);}.ds-input{font:15px/1.65 \"Noto Sans KR\", \"Apple SD Gothic Neo\", sans-serif;display:block;margin-top:6px;background:white;color:var(--ink,#242132);border:1px solid #aaa3bb;border-radius:8px;padding:10px 12px;min-height:44px;caret-color:var(--action,#543391);}.ds-input:focus-visible{outline:3px solid #7958b5;outline-offset:3px;}",
+      "refersTo": "input"
+    },
+    {
+      "name": "Current navigation",
+      "kind": "nav",
+      "description": "Extracted from WebContent/css/desk.css.",
+      "html": "<nav aria-label=\"예시 탐색\"><a class=\"ds-current\" aria-current=\"page\" href=\"#preview\">내 작업</a></nav>",
+      "css": ".ds-current{font:15px/1.65 \"Noto Sans KR\", \"Apple SD Gothic Neo\", sans-serif;display:block;padding:9px 12px;text-decoration:none;border-radius:8px;font-size:14px;background:#e4dced;color:#40236f;}.ds-current:focus-visible{outline:3px solid #7958b5;outline-offset:3px;}.ds-current:hover{background:#e4dced;color:#40236f;}"
+    },
+    {
+      "name": "Supporting container",
+      "kind": "card",
+      "description": "Extracted from WebContent/css/desk.css.",
+      "html": "<section class=\"ds-support\"><p>작업 정보</p></section>",
+      "css": ".ds-support{font:15px/1.65 \"Noto Sans KR\", \"Apple SD Gothic Neo\", sans-serif;color:var(--ink,#242132);border:1px solid var(--line,#ddd9e6);border-radius:8px;padding:24px;background:white;}"
+    },
+    {
+      "name": "Empty state",
+      "kind": "custom",
+      "description": "Extracted from WebContent/css/desk.css.",
+      "html": "<p class=\"ds-empty\">아직 표시할 기록이 없습니다.</p>",
+      "css": ".ds-empty{font:15px/1.65 \"Noto Sans KR\", \"Apple SD Gothic Neo\", sans-serif;padding:40px 24px;background:#f7f6fa;color:var(--muted,#625d73);}"
+    },
+    {
+      "name": "Record row",
+      "kind": "custom",
+      "description": "Extracted from WebContent/css/desk.css.",
+      "html": "<article class=\"ds-row\"><strong>기록 제목</strong><p>상태와 다음 작업을 확인하세요.</p></article>",
+      "css": ".ds-row{font:15px/1.65 \"Noto Sans KR\", \"Apple SD Gothic Neo\", sans-serif;padding:20px 0;border-bottom:1px solid var(--line,#ddd9e6);color:var(--ink,#242132);}.ds-row p{color:var(--muted,#625d73);}"
+    }
+  ],
+  "narrative": {
+    "northStar": "업무 배정 데스크",
+    "overview": "White work surfaces, a pale violet sidebar and deep violet actions organize recruitment and team work. Project rows prioritize titles, roles and remaining capacity; the work panel keeps personal tasks close. State and role changes belong to the task content rather than decorative charts.",
+    "keyCharacteristics": [
+      "Task-first hierarchy",
+      "Explicit environment and state",
+      "Source-based components"
+    ],
+    "rules": [],
+    "dos": [
+      "Preserve route and field contracts.",
+      "Keep focus visible."
+    ],
+    "donts": [
+      "Do not imply production success from synthetic state.",
+      "Do not claim visual verification without rendering."
+    ]
+  }
+}

@@ -10,7 +10,7 @@
 
 	<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
 	<script src="js/main.js"></script>
-	<link rel="stylesheet" href="css/header.css" />
+	<link rel="stylesheet" href="css/header.css" /><link rel="stylesheet" href="css/desk.css" />
 	<script>
 		$(document).ready(function() {
 			 
@@ -39,7 +39,7 @@
 <body>
 	<tiles:insertAttribute name="top" />
 	
-	<div>
+	<main id="sm-main">
 		<s:if test="mainpage == null || mainpage == ('main')">
 			<tiles:insertAttribute name="main" />
 		</s:if>
@@ -157,7 +157,10 @@
 			<tiles:insertAttribute name="hopelist" />
 		</s:elseif>
 		<s:elseif test="mainpage == ('deletehopelist')">
-			<tiles:insertAttribute name="hopelist" />
+			<tiles:insertAttribute name="deletehopelist" />
+		</s:elseif>
+		<s:elseif test="mainpage == ('sendcomplete')">
+			<tiles:insertAttribute name="sendcomplete" />
 		</s:elseif>
 		
 		
@@ -173,8 +176,17 @@
 		<s:elseif test="mainpage == ('guide3')">
 			<tiles:insertAttribute name="guide3" />
 		</s:elseif>
-	</div>
-	<div>
+<s:elseif test="mainpage == ('msglist')"><tiles:insertAttribute name="msglist"/></s:elseif>
+<s:elseif test="mainpage == ('msgwrite')"><tiles:insertAttribute name="msgwrite"/></s:elseif>
+<s:elseif test="mainpage == ('msginfo')"><tiles:insertAttribute name="msginfo"/></s:elseif>
+<s:elseif test="mainpage == ('ratinglist')"><tiles:insertAttribute name="ratinglist"/></s:elseif>
+<s:elseif test="mainpage == ('ratingwrite')"><tiles:insertAttribute name="ratingwrite"/></s:elseif>
+<s:elseif test="mainpage == ('withdraw')"><tiles:insertAttribute name="withdraw"/></s:elseif>
+<s:elseif test="mainpage == ('managewrite')"><tiles:insertAttribute name="managewrite"/></s:elseif>
+<s:elseif test="mainpage == ('adminhome')"><tiles:insertAttribute name="adminhome"/></s:elseif>
+
+	</main>
+	<div id="sm-bottom">
 		<tiles:insertAttribute name="bottom" />
 	</div>
 </body>

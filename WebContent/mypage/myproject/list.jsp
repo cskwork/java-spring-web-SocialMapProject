@@ -71,7 +71,7 @@
 			   <th><strong>프로젝트명</strong></th>
 			   <th><strong>카테고리</strong></th>
 			   <th><strong>프로젝트 기간</strong></th>
-			   <th><strong>현재모집인원/모집인원</strong></th>
+			   <th><strong>현재 참여 / 추가 모집</strong></th>
 			   <th><strong>지역</strong></th>
 			   <th><strong>임금</strong></th>
 			</tr>
@@ -96,12 +96,21 @@
 				  <td><s:a href="%{viewURL}"><s:property value="title" /></s:a></td>
 				  <td><s:property value="comp" /></td>
 				  <td><s:property value="startdate" /> ~ <s:property value="enddate"/></td>
-				  <td><s:property value="currmem"/>/<s:property value="recmem" /></td>
+				  <td><s:property value="currmem"/>명 / 추가 <s:property value="recmem" />명</td>
 				  <td><s:property value="loc" /></td>
-				  <td><s:property value="sal" /></td>
+				  <td><s:if test="sal == null || sal == ''">정보 없음</s:if><s:elseif test="sal == '0'">무급</s:elseif><s:else><s:property value="sal" />원</s:else></td>
 			   </tr>
 			</s:iterator>
 			 </table>
+			 <s:iterator value="list">
+			 <section class="sm-track">
+			  <h3><s:property value="title" /> 진행 단계</h3>
+			  <s:if test="status == 'completed'"><ol class="sm-steps"><li class="done"><s:if test="#session.auth == 1">모집 등록</s:if><s:else>참여 신청</s:else></li><li class="done"><s:if test="#session.auth == 1">팀원 수락</s:if><s:else>팀 합류</s:else></li><li class="done">모집 마감</li><li class="done">프로젝트 완료</li><li class="current">팀원 평가 <a href="RatingList.action">평점 보기</a></li></ol></s:if>
+			  <s:elseif test="status == 'released'"><ol class="sm-steps"><li class="done"><s:if test="#session.auth == 1">모집 등록</s:if><s:else>참여 신청</s:else></li><li class="done"><s:if test="#session.auth == 1">팀원 수락</s:if><s:else>팀 합류</s:else></li><li class="current">해산됨</li></ol></s:elseif>
+			  <s:elseif test="status == 'closed' || recmem <= 0"><ol class="sm-steps"><li class="done"><s:if test="#session.auth == 1">모집 등록</s:if><s:else>참여 신청</s:else></li><li class="done"><s:if test="#session.auth == 1">팀원 수락</s:if><s:else>팀 합류</s:else></li><li class="current">모집 마감 · <s:property value="currmem" />명 확정</li><li>프로젝트 완료</li><li>팀원 평가</li></ol></s:elseif>
+			  <s:else><ol class="sm-steps"><li class="done"><s:if test="#session.auth == 1">모집 등록</s:if><s:else>참여 신청</s:else></li><li class="done"><s:if test="#session.auth == 1">팀원 수락</s:if><s:else>팀 합류</s:else></li><li class="current">모집 중 · 추가 <s:property value="recmem" />명</li><li>모집 마감</li><li>프로젝트 완료</li><li>팀원 평가</li></ol></s:else>
+			 </section>
+			 </s:iterator>
 	  </div>
    </div>
 </div>

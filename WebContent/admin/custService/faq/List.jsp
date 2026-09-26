@@ -7,7 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
 <title>FAQ - 자주묻는 질문</title>
-</head>
+<link rel="stylesheet" href="css/desk.css" /><meta name="csrf-token" content="<s:property value="#session.csrf"/>"><script src="js/native-forms.js" defer></script></head>
 <body>
 	 <table width="600" border="0" cellspacing="0" cellpadding="2">
 		<tr>

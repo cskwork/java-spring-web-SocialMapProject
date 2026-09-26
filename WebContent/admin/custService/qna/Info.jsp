@@ -11,7 +11,7 @@
          var oWin = window.open(url, name, "scrollbars=no, status=no, resizable=no, width=300, height=150");
       }
    </script>
-</head>
+<link rel="stylesheet" href="css/desk.css" /><meta name="csrf-token" content="<s:property value="#session.csrf"/>"><script src="js/native-forms.js" defer></script></head>
 <body>
 <div align="center">
    <table width="100%" height="100%" style="margin: auto;" border="0">
