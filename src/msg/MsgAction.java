@@ -185,7 +185,7 @@ public class MsgAction extends ActionSupport {
 		
 		sqlMapper.insert("hopelist.insertHopeList", paramClass2);
 		
-		setMainpage("projlist");
+		setMainpage("sendcomplete");
 		
 		return SUCCESS;
 	}

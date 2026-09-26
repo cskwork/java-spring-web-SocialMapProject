@@ -183,6 +183,7 @@
 		<update id="updateSpec" parameterClass="specReg">
 			update specreg 
 			 set exp=#exp#, maj=#maj#, addr=#addr#, contadd=#contadd#, showlog=#showlog#
+			 <include refid="where-id"/>
 		</update>
 		
 		<delete id="deleteSpec" parameterClass="specReg">

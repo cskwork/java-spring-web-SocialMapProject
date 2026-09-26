@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="css/write.css">
 	<script type="text/javascript">
 		function validation() {
-			var frm = document.forms(0);
+			var frm = document.userinput;
 			if(frm.title.value == "") {
 				alert("제목을 입력해주세요");
 				return false;
@@ -23,7 +23,7 @@
 			
 		}
 		function majorCheck(){
-			url="http://localhost:8080/SocialMap/Major.action";
+			url="Major.action";
 			window.open(url,"post","toolbar=no ,width=350 ,height=400 ,directories=no,status=yes,scrollbars=yes,menubar=no");
 		}
 	</script>
@@ -42,7 +42,7 @@
 			</s:if>
 			
 			<s:else>
-				<form action="ProjWrite.action" method="post" name="userinput" enctype="multipart/form-data" onsubmit="return validation();">
+				<form action="<s:if test="teamno != null && teamno != '' && teamno != '0'">ProjModify.action</s:if><s:else>ProjWrite.action</s:else>" method="post" name="userinput" enctype="multipart/form-data" onsubmit="return validation();">
 					<table class="writetable">
 						<tr>
 							<td class="list">팀장 ID</td>
@@ -73,7 +73,7 @@
 						<tr>
 							<td class="list">모집전공</td>
 							<td class="input">
-								<input type="text" name="maj" maxlength="50"><%--  value="<s:property value='resultClass.maj'/> --%>
+								<input type="text" name="maj" maxlength="50" value="<s:property value='resultClass.maj'/>">
 								<input type="button" onclick="majorCheck()" value="전공 찾기" />
 							</td>
 						</tr>
@@ -96,6 +96,7 @@
 						<tr class="btn">
 							<td colspan="2">
 								<s:hidden value="1" name="step"/>
+								<s:hidden value="%{teamno}" name="teamno"/>
 								<input type="button" value="취    소" onclick="javascript:window.location='ProjList.action'" >
 								<input type="submit" value="작성하기">
 							</td>

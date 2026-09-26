@@ -75,12 +75,12 @@
 					<td><s:property value="resultClass.exp" /></td>
 				</tr>
 				<tr>
-					<td class="list">자격증</td>
-					<td><s:property value="resultClass.spec" /></td>
+					<td class="list">전공</td>
+					<td><s:property value="resultClass.maj" /></td>
 				</tr>
 				<tr>
-					<td class="list">프로젝트이력</td>
-					<td><s:property value="resultClass.proexp" /></td>
+					<td class="list">지역</td>
+					<td><s:property value="resultClass.addr" /></td>
 				</tr>
 				<tr>
 					<td class="list">추가내용</td>

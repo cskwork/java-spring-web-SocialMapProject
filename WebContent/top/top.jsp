@@ -45,10 +45,10 @@
 						<a href="#n">Guide</a>
 						<div>
 							<ul>
-								<li><a href="">프리랜서/프로젝트 등록방법</a></li>
-								<li><a href="">프로젝트/팀원 찾는방법</a></li>
-								<li><a href="">프로젝트 참여방법</a></li>
-								<li><a href="modifyMemberForm.action">회원정보 수정/탈퇴</a></li>
+								<li><a href="guideHome.action">프리랜서/프로젝트 등록방법</a></li>
+								<li><a href="guideHome1.action">프로젝트/팀원 찾는방법</a></li>
+								<li><a href="guideHome2.action">프로젝트 참여방법</a></li>
+								<li><a href="guideHome3.action">회원정보 수정/탈퇴</a></li>
 							</ul>
 						</div>
 					</li>
@@ -92,7 +92,7 @@
 			</div>
 		</div>
 		<div class="wrap">
-			<h1><a href="http://localhost:8080/SocialMap/SocialMap.action"><img src="images/logo.png" alt="" /></a></h1>
+			<h1><a href="SocialMap.action"><img src="images/logo.png" alt="" /></a></h1>
 			<div class="logon">
 				<s:if test="#session.id == null || #session.id == ''" >
 					<a class="login" href="Login.action">로그인</a>

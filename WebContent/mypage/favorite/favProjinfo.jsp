@@ -33,7 +33,7 @@
 <div class="contents clearfix">
 	<div class="title">
 		<div class="wrap">
-			<h2>관심스펙 > 상세보기</h2>
+			<h2>관심플젝 > 상세보기</h2>
 		</div>
 	</div>
 	<div class="wrap">

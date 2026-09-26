@@ -63,10 +63,14 @@
 						</s:if>
 						
 						<input type="button" value="리스트" onclick="javascript:window.location='SpecList.action'"/>
+						<s:if test="id == resultClass.id">
 						<input type="button" value="글 삭제" onclick="javascript:window.location='SpecDelete.action?id=<s:property value="resultClass.id"/>'"/>
 						<input type="button" value="글 수정" onclick="javascript:window.location='SpecModify.action?step=0&id=<s:property value="resultClass.id"/>'"/>
+						</s:if>
 						<s:hidden value="resultClass.id" />
+						<s:if test="auth == 1">
 						<input type="button" value="스크랩하기" onclick="favList()"/>
+						</s:if>
 					</td>
 				</tr>
 			</table>

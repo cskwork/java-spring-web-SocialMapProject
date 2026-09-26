@@ -30,7 +30,7 @@
 <div class="contents clearfix">
 	<div class="title">       
 		<div class="wrap">
-			<h2>관심스펙리스트</h2>
+			<h2>관심플젝리스트</h2>
 		</div>
 	</div>
 	<div class="wrap">
@@ -73,7 +73,7 @@
 						<th scope="col">프로젝트명</th>
 						<th scope="col">카테고리</th>
 						<th scope="col">프로젝트 기간</th>
-						<th scope="col">모집인원</th>
+						<th scope="col">현재모집인원/모집인원</th>
 						<th scope="col">지역</th>
 					</tr>
 					
@@ -100,7 +100,7 @@
 							<td><s:a href="%{viewURL}"><s:property value="title" /></s:a></td>
 							<td><s:property value="comp" /></td>
 							<td><s:property value="startdate" /> ~ <s:property value="enddate"/></td>
-							<td><s:property value="recmem" />/<s:property value="currmem"/></td>
+							<td><s:property value="currmem"/>/<s:property value="recmem" /></td>
 							<td><s:property value="loc" /></td>
 						</tr>
 					</s:iterator>

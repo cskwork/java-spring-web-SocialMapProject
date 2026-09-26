@@ -157,7 +157,10 @@
 			<tiles:insertAttribute name="hopelist" />
 		</s:elseif>
 		<s:elseif test="mainpage == ('deletehopelist')">
-			<tiles:insertAttribute name="hopelist" />
+			<tiles:insertAttribute name="deletehopelist" />
+		</s:elseif>
+		<s:elseif test="mainpage == ('sendcomplete')">
+			<tiles:insertAttribute name="sendcomplete" />
 		</s:elseif>
 		
 		

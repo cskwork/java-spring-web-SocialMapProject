@@ -1,0 +1,133 @@
+/* 원본 CSS(header/list/write/notice/faq.css) 위에 얹는 데모 전용 보정.
+   원본 배치(고정 1200px 폭, float 레이아웃, 표 구조)는 유지하고 좁은 화면에서만 흐름을 바꾼다. */
+
+html { -webkit-text-size-adjust: 100%; }
+body { padding-bottom: 96px; }
+*, *::before, *::after { box-sizing: border-box; }
+a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible {
+  outline: 3px solid #f0a500; outline-offset: 2px;
+}
+
+/* ---------- 데모 안내 막대 (항상 표시) ---------- */
+#sm-demo-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 400;
+  display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; justify-content: center;
+  padding: 10px 16px; background: #1b3b7b; color: #fff; font-size: 15px; line-height: 1.4;
+}
+#sm-demo-bar .sm-demo-notice { margin: 0; }
+#sm-demo-bar .sm-demo-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+#sm-demo-bar select, #sm-demo-bar button {
+  font: inherit; font-size: 14px; padding: 6px 10px; border: 1px solid #fff; border-radius: 4px; background: #fff; color: #1b3b7b;
+}
+#sm-demo-bar button { background: transparent; color: #fff; cursor: pointer; }
+#sm-demo-bar button:hover { background: #fff; color: #1b3b7b; }
+
+/* ---------- 알림 (원본 alert 대체) ---------- */
+#sm-toast { position: fixed; right: 16px; bottom: 90px; z-index: 500; display: flex; flex-direction: column; gap: 8px; max-width: min(420px, calc(100vw - 32px)); }
+.sm-toast-item { padding: 12px 16px; border-radius: 6px; background: #1761a0; color: #fff; font-size: 15px; box-shadow: 0 4px 14px rgba(0,0,0,.2); }
+.sm-toast-error { background: #a3261b; }
+
+/* ---------- 팝업 대화상자 (window.open 대체) ---------- */
+#sm-popup { width: min(420px, calc(100vw - 32px)); max-height: 80vh; padding: 0; border: 1px solid #1761a0; border-radius: 6px; }
+#sm-popup::backdrop { background: rgba(0,0,0,.5); }
+.sm-popup-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #1761a0; color: #fff; }
+.sm-popup-head button { border: 0; background: transparent; color: #fff; font-size: 24px; line-height: 1; cursor: pointer; }
+.sm-popup-body { padding: 8px 14px 16px; overflow: auto; }
+.sm-popup-body .tstyle_list { width: 100%; margin-top: 0; }
+
+/* ---------- 데모에서 뺀 것 표시 ---------- */
+.demo-unavailable { opacity: .55; cursor: not-allowed !important; }
+a.demo-unavailable::after { content: " (데모 미제공)"; font-size: .8em; }
+.demo-omitted { display: block; padding: 18px; border: 1px dashed #9aa9d6; background: #f5f5ff; color: #555; font-size: 15px; }
+.demo-poster {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  min-width: 65px; min-height: 40px; padding: 6px; background: linear-gradient(135deg, #1761a0, #1b3b7b); color: #fff; font-size: 13px;
+}
+.demo-hint { margin-top: 12px; text-align: center; font-size: 14px; color: #1b3b7b; }
+.demo-error { padding: 24px 0; font-size: 18px; color: #a3261b; }
+.demo-logo { display: block; }
+
+/* 원본 메인 배경 사진(header.jpg)을 복사하지 않아 같은 색 계열의 면으로 대신한다 */
+.visual { background: linear-gradient(135deg, #1761a0 0%, #1b3b7b 60%, #4dc6fe 140%); }
+.visual .v_cts { padding: 180px 0 120px; }
+.visual .v_cts h2::before { content: "SOCIAL MAP"; display: block; font-size: .55em; letter-spacing: .08em; color: #fff; }
+.visual .v_cts h2::after { content: "프로젝트 팀원 모집 · 프리랜서 찾기"; display: block; margin-top: 12px; font-size: .18em; font-weight: 400; color: #e6f2ff; }
+.search { text-align: center; }
+.search h3 { margin-top: 40px; margin-bottom: 20px; }
+.search a, .search a:hover { margin-left: 0; }
+
+/* 대회 TOP 5: 원본 500px 이미지 슬라이드 → 가로 스크롤 카드 */
+#main_scroll { width: 100%; height: auto; overflow-x: auto; margin-bottom: 20px; }
+#main_scroll ul { display: flex; gap: 12px; width: auto; height: auto; padding: 8px 0; }
+#main_scroll ul li { float: none; flex: 0 0 220px; width: 220px; height: 140px; }
+#main_scroll ul li a, #main_scroll .demo-poster { display: flex; width: 100%; height: 100%; text-decoration: none; font-size: 17px; }
+
+/* 원본 floatMenu(left:1600px)는 1600px보다 좁은 화면에서 보이지 않았다 → 화면 오른쪽에 고정 */
+.floatMenu { position: fixed; left: auto; right: 16px; top: 250px; width: 150px; height: auto; z-index: 200; }
+.floatMenu .listtable input[type=submit] { width: 100%; height: 44px !important; font-size: 17px !important; }
+/* 고정 메뉴(오른쪽 166px)가 1200px 본문과 겹치지 않는 폭(1540px 이상)에서만 고정하고, 그보다 좁으면 본문 아래 가로 줄로 둔다. */
+@media (max-width: 1540px) {
+  .floatMenu { position: static; width: auto; margin: 0 16px 24px; background: none; }
+  .floatMenu .listtable, .floatMenu .listtable tbody, .floatMenu .listtable tr { display: flex; gap: 8px; width: 100%; }
+  .floatMenu .listtable td { flex: 1; }
+}
+/* 화면 전환 때 제목으로 옮긴 포커스(스크린리더 안내용)는 테두리를 그리지 않는다. */
+#sm-main h2[tabindex="-1"]:focus { outline: none; }
+
+/* ---------- 좁은 화면 ---------- */
+@media (max-width: 1260px) {
+  .wrap { width: auto; max-width: 1200px; margin-left: auto; margin-right: auto; padding-left: 16px; padding-right: 16px; }
+  .header .wrap { padding-right: 16px; }
+  .contents .box { width: 33.33%; }
+  .sidebox { width: 100%; float: none; display: block; padding-top: 24px; }
+  .sidebox > h2 { width: 100%; height: auto; padding: 14px 0; }
+  .sidebox > ul { display: flex; flex-wrap: wrap; }
+  .sidebox > ul > li { flex: 1 1 160px; padding: 12px 6px; }
+  .sidebox > ul > li > a { font-size: 1.1em; }
+  .detailbox { width: 100%; float: none; display: block; padding-left: 16px; padding-right: 16px; }
+  .detailbox .tstyle_list { width: 100% !important; }
+  .writetable { width: 100%; padding-left: 0; padding-top: 40px; }
+}
+
+@media (max-width: 760px) {
+  body { font-size: 16px; padding-bottom: 150px; }
+  /* 안내 막대: 계정 선택과 초기화를 한 줄에 두어 화면을 덜 가린다 */
+  #sm-demo-bar { gap: 6px; padding: 8px 12px; font-size: 13px; }
+  #sm-demo-bar .sm-demo-controls { flex-wrap: nowrap; width: 100%; }
+  #sm-demo-bar .sm-demo-controls label { white-space: nowrap; }
+  #sm-demo-bar select { flex: 1; min-width: 0; }
+  #sm-demo-bar button { white-space: nowrap; }
+  .title { height: auto; padding: 16px 0; }
+  .title h2 { font-size: 26px; padding-top: 60px; }
+  .contents { padding: 60px 0 40px; }
+  .contents .box { width: 100%; float: none; display: block; }
+  .search h3 { margin: 24px 0 8px; }
+  .visual .v_cts { padding: 120px 0 60px; }
+  .v_cts h2 { font-size: 5em; }
+  .header h1 { width: 150px; height: 50px; }
+  .header .demo-logo { width: 150px; height: auto; }
+  .login, .login:hover { font-size: 1.2em; }
+  .greet { font-size: 1em; }
+  .mobile_gnb .gnb_rbg { width: 85%; }
+  .gnb_rbg > ul { left: 7%; width: 86%; }
+  /* 목록 표는 가로로 넘겨 본다 */
+  .listtable, .tstyle_list, .searchtable { display: block; overflow-x: auto; width: 100%; }
+  .listtable .list_title > td > strong { font-size: 16px; white-space: nowrap; }
+  .listtable .list > td > a { font-size: 17px; }
+  .listtable .list > td, .tstyle_list td, .tstyle_list th { white-space: nowrap; padding-left: 8px; padding-right: 8px; }
+  .searchtable { padding: 12px; margin-top: 20px; }
+  .searchtable .selectbox { padding-bottom: 12px; line-height: 2.4; }
+  .searchtable tr[style] { float: none !important; }
+  .searchtable input[type=text] { width: 100% !important; margin: 6px 0; }
+  .searchbox { float: none; display: block; }
+  .writetable, .writetable tbody, .writetable tr, .writetable td { display: block; width: 100% !important; }
+  .writetable .list { padding: 8px 10px 4px; border-bottom: 0; }
+  .writetable .input { padding: 4px 10px 10px; }
+  .writetable input[type=text], .writetable input[type=date], .writetable textarea, .detailbox input[type=text], .detailbox textarea { max-width: 100%; }
+  .detailbox textarea { width: 100%; }
+  /* Q&A 작성·수정 표(원본 width=750px, 제목칸 370px)는 입력칸을 화면 폭에 맞춘다 */
+  .tstyle_list input[type=text], .tstyle_list textarea { width: 100% !important; }
+  .board_search input[type=text] { width: 100% !important; margin: 8px 0; }
+  input[type=button], input[type=submit] { min-height: 40px; }
+  #sm-toast { bottom: 150px; }
+}

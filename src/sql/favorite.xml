@@ -70,7 +70,7 @@
  	</select>
  	
  	<delete id="deleteFavProj" parameterClass="favorite">
- 		delete from favoritelist where teamno=#teamno# and artlog=0
+		delete from favoritelist where teamno=#teamno# and artlog=0 and id=#id#
  	</delete>
 </sqlMap>  
 

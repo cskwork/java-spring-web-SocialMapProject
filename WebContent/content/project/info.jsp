@@ -74,8 +74,8 @@
 						<input type="button" value="리스트로 돌아가기" onclick="javascript:window.location='ProjList.action'"/>
 						
 						<s:if test="id == resultClass.leaderid">
-							<input type="button" value="프로젝트 삭제" onClick="" >
-							<input type="button" value="프로젝트 수정" onClick="" >
+							<input type="button" value="프로젝트 삭제" onclick="if(confirm('프로젝트를 삭제하시겠습니까?')) window.location='ProjDelete.action?leaderid=<s:property value="resultClass.leaderid"/>&teamno=<s:property value="resultClass.teamno"/>'" >
+							<input type="button" value="프로젝트 수정" onclick="javascript:window.location='ProjModify.action?step=0&teamno=<s:property value="resultClass.teamno"/>'" >
 						</s:if>
 						
 						<%-- <input type="button" value="글 삭제" onclick="javascript:window.location='ProjDelete.action?leaderid=<s:property value="resultClass.leaderid"/>&teamno=<s:property value="resultClass.teamno"/>'"/>

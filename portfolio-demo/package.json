@@ -1,0 +1,15 @@
+{
+  "name": "socialmap-portfolio-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SocialMap(Struts2/iBATIS/JSP) 원본 화면을 그대로 옮긴 정적 모의 데모",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test --test-concurrency=1 test/*.test.mjs",
+    "preview": "node scripts/preview.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

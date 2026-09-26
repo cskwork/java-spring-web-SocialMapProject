@@ -271,6 +271,9 @@ public class ProjectTeamAction extends ActionSupport {
 			Date end = format.parse(getEnddate() + " 23:59:59");
 
 			paramClass = new ProjectTeamVO();
+			ProjectTeamVO before = (ProjectTeamVO) sqlMapper.queryForObject("content.selectProj", Integer.parseInt(getTeamno()));
+			paramClass.setTeamno(getTeamno());
+			paramClass.setCurrmem(before.getCurrmem());
 			paramClass.setLeaderid(session.get("id"));
 			paramClass.setTitle(getTitle());
 			paramClass.setComp(getComp());
@@ -310,9 +313,10 @@ public class ProjectTeamAction extends ActionSupport {
 	      
 	      System.out.println(tempClass1.getTeamno1());
 	      
-	      resultClass = (ProjectTeamVO) sqlMapper.queryForObject("content.selectProj", Integer.parseInt(teamno));
-	      
-	      list.add(resultClass);
+	      if (!(teamno == null || teamno.equals("") || teamno.equals("0"))) {
+		resultClass = (ProjectTeamVO) sqlMapper.queryForObject("content.selectProj", Integer.parseInt(teamno));
+		list.add(resultClass);
+	      }
 
 	      setMainpage("myprojlist");
 	      return SUCCESS;
