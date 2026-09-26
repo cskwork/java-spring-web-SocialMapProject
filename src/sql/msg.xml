@@ -17,10 +17,10 @@
 		select * from msg
 		<dynamic prepend="WHERE">
 			<isNotNull prepend="AND" property="getid">
-				 getid=#getid#
+				 getid=#getid# and not exists (select 1 from message_deleted d where d.no=msg.no and d.id=#getid#)
 			</isNotNull>
 			<isNotNull prepend="AND" property="sendid">
-				 sendid=#sendid#
+				 sendid=#sendid# and not exists (select 1 from message_deleted d where d.no=msg.no and d.id=#sendid#)
 			</isNotNull>
 		</dynamic>
 		 order by sendtime desc
@@ -35,7 +35,7 @@
 	<insert id="MsgWrite" parameterClass="msg">
 		insert into msg
 		 (no,sendid,getid,title,cont,sendtime)
-		 values ((select max(no) from msg)+1,#sendid#,#getid#,#title#,#cont#,#sendtime#)
+		 values (msg_seq.nextval,#sendid#,#getid#,#title#,#cont#,#sendtime#)
 	</insert>
 
 	<delete id="MsgDelete" parameterClass="msg">

@@ -1,3 +1,4 @@
+import { install, migrate } from './full-actions.js';
 // 모의 어댑터: 원본 Struts 액션(struts.xml의 name)을 하나씩 브라우저 안의 함수로 바꾼다.
 // DB 대신 state(원본 테이블과 같은 모양의 배열)를 읽고 고친다. 네트워크·쪽지·결제는 없다.
 // 각 함수는 원본 Java 메서드의 흐름(mainpage, step, check, result 이름)을 따르고,
@@ -24,9 +25,10 @@ function base(ctx, mainpage) {
 }
 const me = (ctx) => ctx.state.member.find((m) => m.id === ctx.state.session.id) || null;
 const projectOf = (ctx, teamno) => ctx.state.projectteam.find((p) => String(p.teamno) === String(teamno)) || null;
-const projectOfLeader = (ctx, leaderid) => ctx.state.projectteam.find((p) => p.leaderid === leaderid) || null;
+const projectOfLeader = (ctx, leaderid) => ctx.state.projectteam.find((p) => p.leaderid === leaderid && !['completed','released'].includes(p.status)) || null;
 const redirect = (action, alert, params = []) => ({ redirect: { action, params }, alert });
 const needLogin = () => redirect('Login', '로그인이 필요합니다. 아래 데모 계정으로 로그인해 보세요.');
+const featuredProjects = (ctx) => [...ctx.state.projectteam].filter((p) => Number(p.recmem) > 0).sort((a, b) => Number(b.teamno) - Number(a.teamno)).slice(0, 3);
 const nextSeq = (ctx, table) => { const n = ctx.state.seq[table]; ctx.state.seq[table] = n + 1; return n; };
 
 function projectInput(p) {
@@ -60,7 +62,7 @@ function joinTeam(ctx, memberId, leaderId) {
   if (!member) return '회원 정보를 찾을 수 없습니다.';
   if (!project) return '팀장의 프로젝트를 찾을 수 없습니다.';
   if (filled(member.teamno1)) return ONE_PROJECT_MESSAGE;
-  if (Number(project.recmem) <= 0) return '모집 인원이 모두 찼습니다.';
+  if (project.status && project.status !== 'recruiting' || Number(project.recmem) <= 0) return '모집 인원이 모두 찼습니다.';
   member.teamno1 = String(project.teamno);
   project.currmem = String(Number(project.currmem) + 1);
   project.recmem = String(Number(project.recmem) - 1);
@@ -76,7 +78,7 @@ export function validateHope(ctx, { sendid, getid, log }) {
   if (!member) return '프리랜서 정보를 찾을 수 없습니다.';
   if (!project) return log === 0 ? '먼저 프로젝트를 등록해주세요.' : '팀장의 프로젝트를 찾을 수 없습니다.';
   if (filled(member.teamno1)) return log === 1 ? ONE_PROJECT_MESSAGE : '이미 다른 프로젝트를 진행 중인 프리랜서입니다.';
-  if (Number(project.recmem) <= 0) return '모집 인원이 모두 찼습니다.';
+  if (project.status && project.status !== 'recruiting' || Number(project.recmem) <= 0) return '모집 인원이 모두 찼습니다.';
   if (ctx.state.hopelist.some((h) => h.sendid === sendid && h.getid === getid)) {
     return log === 1 ? '이미 참여를 희망한 프로젝트입니다.' : '이미 참여를 권유한 프리랜서입니다.';
   }
@@ -87,12 +89,13 @@ function sendHope(ctx, log) {
   const s = ctx.state.session;
   const getid = String(one(ctx.params.getid) ?? '');
   const hope = { sendid: s.id, getid, log };
-  const back = log === 1 ? ['ProjList'] : ['SpecInfo', [['id', getid]]];
+  const project = projectOfLeader(ctx, getid);
+  const back = log === 1 ? (project ? ['ProjInfo', [['teamno', project.teamno], ['leaderid', getid]]] : ['ProjList', []]) : ['SpecInfo', [['id', getid]]];
   const error = validateHope(ctx, hope);
   if (error) return redirect(back[0], error, back[1]);
   ctx.state.hopelist.push({ no: nextSeq(ctx, 'hopelist'), ...hope, regdate: stamp(ctx.now) });
   // 원본은 여기서 msg 테이블에 알림 쪽지도 넣었다. 데모는 다른 사람에게 쪽지를 보내지 않는다.
-  return { model: { ...base(ctx, 'sendcomplete'), pagingHtml: '' }, mutated: true, landing: 'MyPage', notice: '신청을 저장했습니다. 알림 쪽지는 데모에서 보내지 않습니다.' };
+  return { model: { ...base(ctx, 'sendcomplete'), pagingHtml: '' }, mutated: true, landing: 'MyPage', notice: '신청을 저장했습니다. 체험 계정을 상대방으로 바꾸고 참여 신청 목록에서 수락할 수 있습니다. 외부 알림은 보내지 않습니다.' };
 }
 
 function specView(spec) {
@@ -119,7 +122,7 @@ function toggleFavorites(ctx, { artlog, ids, key, owner }) {
 export const ACTIONS = {
   // ---------- member.MemberAction ----------
   SocialMap(ctx) {
-    return { model: { ...base(ctx, 'main'), checkdate: 0 } };
+    return { model: { ...base(ctx, 'main'), checkdate: 0, featuredProjects: featuredProjects(ctx) } };
   },
   Login(ctx) {
     const p = ctx.params;
@@ -129,8 +132,8 @@ export const ACTIONS = {
     // 1: 로그인 허가, 2: 패스워드 틀림, 3: 아이디 없음 (원본 주석)
     if (!found) return { model: { ...base(ctx, 'login'), check: '3' } };
     if (found.pwd !== String(one(p.pwd) ?? '')) return { model: { ...base(ctx, 'login'), id: '', check: '2' } };
-    ctx.state.session = { id: found.id, name: found.name, auth: found.auth };
-    return { model: { ...base(ctx, 'main'), checkdate: 0 }, mutated: true, landing: 'SocialMap', notice: `${found.name}(${found.id}) 계정으로 로그인했습니다.` };
+    ctx.state.session = { id: found.id, name: found.name, auth: found.auth, expiresAt: ctx.now.getTime() + 3600000 };
+    return { model: { ...base(ctx, 'main'), checkdate: 0, featuredProjects: featuredProjects(ctx) }, mutated: true, landing: 'SocialMap', notice: `${found.name}(${found.id}) 계정으로 로그인했습니다.` };
   },
   Logout(ctx) {
     ctx.state.session = {};
@@ -167,7 +170,7 @@ export const ACTIONS = {
         ...base(ctx, 'projlist'), ...listModel(ctx, list, 'ProjList', keep),
         complist: ctx.state.competition.map((c) => c.title).sort((a, b) => a.localeCompare(b)),
         loclist: REGIONS, majlist: ctx.state.major.map((m) => m.major_name),
-        check: one(p.check) !== 'false',
+        check: one(p.check) !== 'false', comp: comp || '0', loc: loc || '0', maj: maj || '0', search: search || '', searchnum,
       },
     };
   },
@@ -188,26 +191,26 @@ export const ACTIONS = {
     const error = validateProject(v);
     if (error) return { model: { ...model, step: 0, teamno: null, resultClass: v }, alert: error };
     const teamno = String(nextSeq(ctx, 'projectteam'));
-    ctx.state.projectteam.push({ teamno, leaderid: user.id, ...v, sal: v.sal || '0', currmem: '1' });
+    ctx.state.projectteam.push({ teamno, leaderid: user.id, ...v, sal: v.sal, currmem: '1' });
     user.teamno1 = teamno;
     return { model: { ...model, step: 2, check: true }, mutated: true, landing: 'ProjList', notice: '프로젝트를 등록했습니다.' };
   },
   ProjModify(ctx) {
     const project = projectOf(ctx, one(ctx.params.teamno));
     if (!project) return redirect('ProjList', '프로젝트를 찾을 수 없습니다.');
-    if (project.leaderid !== ctx.state.session.id) return redirect('ProjList', '자신이 등록한 프로젝트만 수정할 수 있습니다.');
+    if (project.leaderid !== ctx.state.session.id && ctx.state.session.auth !== '0') return redirect('ProjList', '자신이 등록한 프로젝트만 수정할 수 있습니다.');
     const step = Number(one(ctx.params.step) || 0);
     const model = { ...base(ctx, 'projwrite'), step: 0, teamno: project.teamno };
     if (step === 0) return { model: { ...model, resultClass: project } };
     const v = projectInput(ctx.params);
     const error = validateProject(v);
     if (error) return { model: { ...model, resultClass: { ...project, ...v } }, alert: error };
-    Object.assign(project, v, { sal: v.sal || '0' });
+    Object.assign(project, v, { sal: v.sal });
     return { result: 'list', model: base(ctx, 'projlist'), mutated: true, notice: '프로젝트를 수정했습니다.' };
   },
   ProjDelete(ctx) {
     const project = projectOf(ctx, one(ctx.params.teamno));
-    if (!project || project.leaderid !== ctx.state.session.id || project.leaderid !== one(ctx.params.leaderid)) {
+    if (!project || ctx.state.session.auth !== '0' && (project.leaderid !== ctx.state.session.id || project.leaderid !== one(ctx.params.leaderid))) {
       return redirect('ProjList', '자신이 등록한 프로젝트만 삭제할 수 있습니다.');
     }
     const s = ctx.state;
@@ -234,7 +237,7 @@ export const ACTIONS = {
   SpecList(ctx) {
     const p = ctx.params;
     const addr = one(p.addr); const maj = one(p.maj); const search = one(p.search);
-    let list = ctx.state.specreg;
+    let list = ctx.state.specreg.filter(x => Number(x.showlog) === 1 || x.id === ctx.state.session.id || ctx.state.session.auth === '0');
     if (search !== undefined) {
       list = list.filter((x) => like(x.id, search));
     } else {
@@ -285,7 +288,7 @@ export const ACTIONS = {
   },
   SpecDelete(ctx) {
     const id = one(ctx.params.id);
-    if (!id || id !== ctx.state.session.id) return redirect('SpecList', '자신의 스펙만 삭제할 수 있습니다.');
+    if (!id || id !== ctx.state.session.id && ctx.state.session.auth !== '0') return redirect('SpecList', '자신의 스펙만 삭제할 수 있습니다.');
     ctx.state.specreg = ctx.state.specreg.filter((x) => x.id !== id);
     ctx.state.favoritelist = ctx.state.favoritelist.filter((f) => !(f.artlog === 1 && f.id === id));
     return { model: base(ctx, 'speclist'), mutated: true, notice: '스펙을 삭제했습니다.' };
@@ -343,12 +346,12 @@ export const ACTIONS = {
     const error = !title ? '제목을 입력해주세요' : !cont ? '내용을 입력해주세요' : title.length > 30 ? '제목은 30자 이내로 입력해주세요' : cont.length > 2000 ? '내용은 2000자 이내로 입력해주세요' : null;
     if (error) return { model: { ...model, resultClass1: { title, cont } }, alert: error };
     ctx.state.qna.push({ no: nextSeq(ctx, 'qna'), qalog: 0, id: ctx.state.session.id, title, cont, regdate: stamp(ctx.now) });
-    return { result: 'list', model: base(ctx, 'qnalist'), mutated: true, notice: '질문을 등록했습니다. 데모에서는 관리자 답변이 달리지 않습니다.' };
+    return { result: 'list', model: base(ctx, 'qnalist'), mutated: true, notice: '질문을 등록했습니다. 관리자 체험 계정에서 답변할 수 있습니다.' };
   },
   QnaModify(ctx) {
     const no = Number(one(ctx.params.no));
     const question = ctx.state.qna.find((q) => q.no === no && q.qalog === 0);
-    if (!question || question.id !== ctx.state.session.id) return redirect('QnaList', '자신이 쓴 질문만 수정할 수 있습니다.');
+    if (!question || question.id !== ctx.state.session.id && ctx.state.session.auth !== '0') return redirect('QnaList', '자신이 쓴 질문만 수정할 수 있습니다.');
     const model = { ...base(ctx, 'qnawrite'), no, step: 0, currentPage: one(ctx.params.currentPage) || 1, resultClass1: question };
     if (Number(one(ctx.params.step) || 0) === 0) return { model };
     const title = String(one(ctx.params.title) ?? '').trim();
@@ -361,7 +364,7 @@ export const ACTIONS = {
   QnaDelete(ctx) {
     const no = Number(one(ctx.params.no));
     const question = ctx.state.qna.find((q) => q.no === no && q.qalog === 0);
-    if (!question || question.id !== ctx.state.session.id) return redirect('QnaList', '자신이 쓴 질문만 삭제할 수 있습니다.');
+    if (!question || question.id !== ctx.state.session.id && ctx.state.session.auth !== '0') return redirect('QnaList', '자신이 쓴 질문만 삭제할 수 있습니다.');
     ctx.state.qna = ctx.state.qna.filter((q) => q.no !== no);
     return { model: base(ctx, 'qnalist'), mutated: true, notice: '질문을 삭제했습니다.' };
   },
@@ -404,10 +407,11 @@ export const ACTIONS = {
     const v = (k) => String(one(p[k]) ?? '').trim();
     if (v('email') && !/^[^\s@]+@[^\s@]+$/.test(v('email'))) return redirect('modifyMemberForm', 'E-mail 형식을 확인해주세요.');
     if (!/^\d{6}$/.test(v('birth')) || !/^[1-4]$/.test(v('gen'))) return redirect('modifyMemberForm', '주민등록번호 앞자리 6자리와 뒷자리 첫 숫자를 입력해주세요.');
-    // 데모는 비밀번호를 저장하지 않는다(데모 계정 비밀번호는 항상 demo).
+    if (v('pwd') && v('pwd').length < 8) return redirect('modifyMemberForm', '새 비밀번호는 8자 이상이어야 합니다.');
+    if (v('pwd')) user.pwd = v('pwd');
     Object.assign(user, { name: v('name') || user.name, birth: v('birth'), gen: v('gen'), email: v('email'), addr: v('addr'), maj: v('maj'), exp: v('exp') });
     ctx.state.session.name = user.name;
-    return { model: base(ctx, 'memberinfo'), mutated: true, notice: '회원 정보를 수정했습니다. (비밀번호는 데모에서 저장하지 않습니다)' };
+    return { model: base(ctx, 'memberinfo'), mutated: true, notice: '회원 정보를 수정했습니다.' };
   },
 
   // ---------- favorite.FavoriteAction ----------
@@ -477,7 +481,7 @@ export const ACTIONS = {
     if (error) return redirect('hopeList', error);
     ctx.state.hopelist = ctx.state.hopelist.filter((h) => h !== hope);
     // 원본은 목록을 다시 읽지 않아 빈 표가 보였다. 데모는 남은 목록을 다시 보여 준다.
-    return { model: hopeListModel(ctx), mutated: true, landing: 'hopeList', notice: `수락했습니다. ${memberId} 님이 팀에 합류했습니다.` };
+    return { model: hopeListModel(ctx), mutated: true, landing: 'hopeList', notice: `수락했습니다. ${memberId} 님이 팀에 합류했습니다. 내 프로젝트에서 현재 참여 인원을 확인하세요.` };
   },
   deleteHopeList(ctx) {
     const no = Number(one(ctx.params.no));
@@ -496,23 +500,9 @@ export const ACTIONS = {
 // struts.xml 에서 같은 메서드를 가리키는 별칭
 ACTIONS.deleteSpec = ACTIONS.SpecDelete;
 
-const ACCOUNT = '회원가입·아이디/비밀번호 찾기는 데모에서 제공하지 않습니다. 아래 데모 계정으로 로그인해 보세요.';
-const MESSAGE = '쪽지(다른 사람에게 메시지 보내기)는 데모에서 제공하지 않습니다.';
-const RATING = '팀원 평점은 실제 사람을 평가하는 기능이라 데모에서 제공하지 않습니다.';
-const WITHDRAW = '회원 탈퇴는 데모에서 제공하지 않습니다. 하단의 "데모 초기화"로 처음 상태로 되돌릴 수 있습니다.';
-const ADMIN = '관리자 기능은 데모에서 제공하지 않습니다.';
-
-// 원본에는 있지만 데모에서 실행하지 않는 액션과 그 이유
-export const UNAVAILABLE = {
-  Find: ACCOUNT, SignUp: ACCOUNT, ConfirmId: ACCOUNT,
-  MsgList: MESSAGE, MsgWrite: MESSAGE, MsgInfo: MESSAGE, MsgDelete: MESSAGE,
-  RatingList: RATING, RatingWrite: RATING,
-  deleteMemberForm: WITHDRAW, checkPwd: WITHDRAW, deleteMember: WITHDRAW,
-  CompWrite: ADMIN, CompDelete: ADMIN, CompModify: ADMIN,
-  QnaAdminWrite: ADMIN, QnaAdminModify: ADMIN,
-  ASWrite: ADMIN, ASModify: ADMIN, ASDelete: ADMIN,
-  FAQInfo: ADMIN, FAQWrite: ADMIN, FAQModify: ADMIN, FAQDelete: ADMIN,
-};
+// All original core actions now have operational adapters.
+export const UNAVAILABLE = {};
+install(ACTIONS);
 
 export class UnmockedActionError extends Error {
   constructor(name) {
@@ -527,7 +517,9 @@ export function runAction(name, { params = {}, state, now = new Date(), chainMod
   if (UNAVAILABLE[name]) return { unavailable: UNAVAILABLE[name] };
   const fn = ACTIONS[name];
   if (!fn) throw new UnmockedActionError(name);
-  const draft = structuredClone(state);
+  const draft = migrate(structuredClone(state));
+  const expired = draft.session.expiresAt && draft.session.expiresAt < now.getTime();
+  if (expired) draft.session = {};
   const out = fn({ params, state: draft, now, chainModel });
-  return { result: 'success', ...out, state: out.mutated ? draft : state };
+  return { result: 'success', ...out, ...(expired ? { mutated: true, notice: '세션이 만료되었습니다.' } : {}), state: out.mutated || expired ? draft : state };
 }

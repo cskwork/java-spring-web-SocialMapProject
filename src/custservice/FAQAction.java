@@ -50,9 +50,7 @@ public class FAQAction extends ActionSupport {
 	private String search;
 
 	public FAQAction() throws IOException {
-		reader = Resources.getResourceAsReader("sqlMapConfig.xml");
-		sqlMapper = SqlMapClientBuilder.buildSqlMapClient(reader);
-		reader.close();
+		sqlMapper = security.Database.client();
 	}
 
 	public String write() throws Exception {

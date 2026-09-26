@@ -37,9 +37,7 @@ public class MyPageAction extends ActionSupport {
 	private String auth;
 
 	public MyPageAction() throws IOException {
-		reader = Resources.getResourceAsReader("sqlMapConfig.xml");
-		sqlMapper = SqlMapClientBuilder.buildSqlMapClient(reader);
-		reader.close();
+		sqlMapper = security.Database.client();
 	}
 
 	public String form() throws Exception {
@@ -52,7 +50,7 @@ public class MyPageAction extends ActionSupport {
 		setName(session.get("name"));
 		setAuth(session.get("auth"));
 		
-		System.out.println(resultClass.getEmail());
+		resultClass.setPwd("");
 		setMainpage("membermodify");
 		
 		return SUCCESS;
@@ -68,7 +66,8 @@ public class MyPageAction extends ActionSupport {
 		setName(session.get("name"));
 		setAuth(session.get("auth"));
 		
-		setMainpage("memberinfo");
+		resultClass.setPwd("");
+        setMainpage("memberinfo");
 		
 		return SUCCESS;
 	}
@@ -84,7 +83,7 @@ public class MyPageAction extends ActionSupport {
 
 		sqlMapper.queryForObject("member.loginMember", session.get("id"));
 
-		paramClass.setPwd(getPwd());
+		paramClass.setPwd(getPwd() == null || getPwd().length() == 0 ? ((MemberVO)sqlMapper.queryForObject("member.loginMember",session.get("id"))).getPwd() : security.Passwords.hash(getPwd()));
 		paramClass.setName(getName());
 		paramClass.setGen(getGen());
 		paramClass.setBirth(getBirth());
@@ -103,44 +102,17 @@ public class MyPageAction extends ActionSupport {
 		return SUCCESS;
 	}
 
-	public String delete() throws Exception {
-		ActionContext context = ActionContext.getContext();
-		Map<String, String> session = (Map<String, String>) context.getSession();
-
-		paramClass = new MemberVO();
-		/*paramClass.setId(session.get("id"));*/
-
-		resultClass = (MemberVO) sqlMapper.queryForObject("member.loginMember", session.get("id"));
-
-		paramClass.setPwd(resultClass.getPwd());
-
-		sqlMapper.update("member.deleteMember", paramClass);
-		
-		System.out.println("!!!!!!");
-		
-		setMainpage("main");
-
-		return SUCCESS;
-	}
-	
-
-	public String checkPwd() throws Exception {
-		ActionContext context = ActionContext.getContext();
-		Map<String, String> session = (Map<String, String>) context.getSession();
-
-		paramClass = new MemberVO();
-		paramClass.setId(session.get("id"));
-		paramClass.setPwd(getPwd());
-		
-		resultClass=(MemberVO) sqlMapper.queryForObject("member.checkPwd", paramClass);
-		
-		if (resultClass == null || resultClass.getPwd().equals("")) {
-			return ERROR;
-		}
-		
-		return SUCCESS;
-	}
-	
+ public String delete() throws Exception {
+  Map session=ActionContext.getContext().getSession();Object verified=session.get("reauthUntil");
+  security.Service.require(verified instanceof Long && ((Long)verified).longValue()>System.currentTimeMillis(),"Reauthentication required");
+  security.Service.withdraw((String)session.get("id"));session.clear();setMainpage("main");return SUCCESS;
+ }
+ public String checkPwd() throws Exception {
+  Map session=ActionContext.getContext().getSession();
+  MemberVO member=(MemberVO)sqlMapper.queryForObject("member.loginMember",session.get("id"));
+  if(member==null||!security.Passwords.verify(getPwd(),member.getPwd()))return ERROR;
+  session.put("reauthUntil",Long.valueOf(System.currentTimeMillis()+300000));return SUCCESS;
+ }
 
 	public String getMainpage() {
 		return mainpage;

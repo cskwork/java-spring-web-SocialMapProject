@@ -51,9 +51,7 @@ public class HopeListAction extends ActionSupport{
 	private String id;
 	
 	public HopeListAction() throws IOException {
-		reader = Resources.getResourceAsReader("sqlMapConfig.xml");
-		sqlMapper = SqlMapClientBuilder.buildSqlMapClient(reader);
-		reader.close();
+		sqlMapper = security.Database.client();
 	}
 	
 	public String hopeList() throws Exception {
@@ -83,55 +81,15 @@ public class HopeListAction extends ActionSupport{
 		return SUCCESS;
 	}
 	
-	public String insertTeam() throws Exception {
-		ActionContext context = ActionContext.getContext();
-		Map<String, String> session = (Map<String, String>) context.getSession();
+ public String insertTeam() throws Exception {
+  String actor=(String)ActionContext.getContext().getSession().get("id");
+  security.Service.accept(actor,no);return hopeList();
+ }
+ public String delete() throws Exception {
+  String actor=(String)ActionContext.getContext().getSession().get("id");
+  security.Service.changed(security.Service.update("delete from hopelist where no=? and getid=?",no,actor));return hopeList();
+ }
 
-		paramClass = new HopeListVO();
-		
-		paramClass.setNo(no);
-		paramClass.setSendid(leaderid);
-		paramClass.setGetid(id);
-		
-
-		System.out.println(paramClass.getNo());
-		System.out.println("보낸사람 : " + paramClass.getSendid());
-		System.out.println("받는사람 : " + paramClass.getGetid());
-		
-		//member테이블에 Teamno1 추가
-		sqlMapper.update("hopelist.insertTeam", paramClass);
-		
-		//projectteam의 현재인원 증가
-		sqlMapper.update("hopelist.addCurrmem", paramClass);	
-		
-		//hopelist에서 삭제하기
-		sqlMapper.delete("hopelist.deleteHopeList", paramClass);
-		
-		setMainpage("hopelist");
-
-		return SUCCESS;
-	}
-	
-	
-	
-	
-	public String delete() throws Exception {
-		ActionContext context = ActionContext.getContext();
-		Map<String, String> session = (Map<String, String>) context.getSession();
-		
-
-		paramClass = new HopeListVO();
-		paramClass.setNo(no); //선택한 제안 번호
-
-		sqlMapper.delete("hopelist.deleteHopeList", paramClass);
-		
-		setMainpage("deletehopelist");
-
-
-		return SUCCESS;
-	}
-
-	
 	public String getId() {
 		return id;
 	}

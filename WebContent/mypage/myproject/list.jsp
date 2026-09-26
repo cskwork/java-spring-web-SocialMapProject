@@ -71,7 +71,7 @@
 			   <th><strong>프로젝트명</strong></th>
 			   <th><strong>카테고리</strong></th>
 			   <th><strong>프로젝트 기간</strong></th>
-			   <th><strong>현재모집인원/모집인원</strong></th>
+			   <th><strong>현재 참여 / 추가 모집</strong></th>
 			   <th><strong>지역</strong></th>
 			   <th><strong>임금</strong></th>
 			</tr>
@@ -96,9 +96,9 @@
 				  <td><s:a href="%{viewURL}"><s:property value="title" /></s:a></td>
 				  <td><s:property value="comp" /></td>
 				  <td><s:property value="startdate" /> ~ <s:property value="enddate"/></td>
-				  <td><s:property value="currmem"/>/<s:property value="recmem" /></td>
+				  <td><s:property value="currmem"/>명 / 추가 <s:property value="recmem" />명</td>
 				  <td><s:property value="loc" /></td>
-				  <td><s:property value="sal" /></td>
+				  <td><s:if test="sal == null || sal == ''">정보 없음</s:if><s:elseif test="sal == '0'">무급</s:elseif><s:else><s:property value="sal" />원</s:else></td>
 			   </tr>
 			</s:iterator>
 			 </table>

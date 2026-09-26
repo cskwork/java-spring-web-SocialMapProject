@@ -82,7 +82,7 @@
 					<td class="input"><s:property value="resultClass.enddate" /></td>
 				</tr>
 				<tr>
-					<td class="list">모집인원</td>
+					<td class="list">추가 모집 인원</td>
 					<td class="input"><s:property value="resultClass.recmem" /></td>
 				</tr>
 				<tr>
@@ -94,7 +94,7 @@
 					<td class="input"><textarea disabled="disabled" onfocus="this.blur()" rows="10" style="border:none; overflow: hidden;" ><s:property value='resultClass.cont' /></textarea></td>
 				</tr>
 				<tr>
-					<td class="list">현재인원</td>
+					<td class="list">현재 참여 인원</td>
 					<td class="input"><s:property value="resultClass.currmem" /></td>
 				</tr>
 				<tr>
@@ -103,7 +103,7 @@
 				</tr>
 				<tr>
 					<td class="list">임금</td>
-					<td class="input"><s:property value="resultClass.sal" />원</td>
+					<td class="input"><s:if test="resultClass.sal == null || resultClass.sal == ''">정보 없음</s:if><s:elseif test="resultClass.sal == '0'">무급</s:elseif><s:else><s:property value="resultClass.sal" />원</s:else></td>
 				</tr>
 				
 				<tr class="btn">
@@ -120,5 +120,5 @@
 	</div>
 	<div class="title">
 	</div>
-</body>
+<s:if test="#session.id == resultClass.leaderid || #session.auth == 0"><form class="sm-lifecycle" action="ProjLifecycle.action" method="post"><input type="hidden" name="csrf" value="<s:property value="#session.csrf"/>"><input type="hidden" name="teamno" value="<s:property value="resultClass.teamno"/>"><label>프로젝트 상태<select name="status"><option value="closed">모집 마감</option><option value="completed">완료 및 팀원 해제</option><option value="released">해산</option></select></label><button type="submit">상태 변경</button></form></s:if></body>
 </html>

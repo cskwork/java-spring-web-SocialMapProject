@@ -113,7 +113,7 @@ test('프로젝트 등록: 진행 중이면 원본처럼 step 2 + check=false, �
   assert.equal(out.model.step, 2);
   assert.equal(member(out.state, 'leader02').teamno1, '13');
   const { step, ...fields } = form;
-  assert.deepEqual(project(out.state, 13), { teamno: '13', leaderid: 'leader02', ...fields, sal: '0', currmem: '1' });
+  assert.deepEqual(project(out.state, 13), { teamno: '13', leaderid: 'leader02', ...fields, sal: '', currmem: '1' });
   assert.equal(run(out.state, 'ProjWrite', { step: '0' }).model.check, false, '두 번째 등록은 막힌다');
   assert.equal(run(as('leader02'), 'ProjWrite', { ...form, recmem: 'abc' }).alert, '모집인원은 1~99 사이의 숫자로 입력해주세요');
   assert.equal(run(as('leader02'), 'ProjWrite', { ...form, enddate: '2026-09-01' }).alert, '종료일은 시작일보다 빠를 수 없습니다');
@@ -166,10 +166,10 @@ test('스펙 등록은 팀원 한 번만, 수정·삭제는 본인만', () => {
   assert.deepEqual([s.specreg.find((x) => x.id === 'member01').maj, s.specreg.find((x) => x.id === 'member01').showlog], ['산업디자인', 0]);
   assert.equal(run(s, 'SpecDelete', { id: 'member02' }).alert, '자신의 스펙만 삭제할 수 있습니다.');
   assert.equal(run(s, 'SpecDelete', { id: 'member01' }).state.specreg.some((x) => x.id === 'member01'), false);
-  assert.equal(run(as('leader01'), 'SpecInfo', { id: 'member07' }).model.resultClass.showlog, '비공개');
+  assert.equal(run(as('leader01'), 'SpecInfo', { id: 'member07' }).redirect.action, 'SpecList');
 });
 
-test('Q&A: 로그인해야 쓰고, 내 질문만 목록·수정·삭제, 검색은 전체', () => {
+test('Q&A: 로그인해야 쓰고, 내 질문만 목록·수정·삭제, 검색도 본인만', () => {
   assert.equal(run(seedState(), 'QnaWrite').redirect.action, 'Login');
   let s = as('member01');
   assert.deepEqual(run(s, 'QnaList').model.list.map((q) => q.no), [1]);
@@ -178,7 +178,7 @@ test('Q&A: 로그인해야 쓰고, 내 질문만 목록·수정·삭제, 검색�
   assert.equal(out.result, 'list');
   s = out.state;
   assert.deepEqual(run(s, 'QnaList').model.list.map((q) => q.no), [5, 1]);
-  assert.equal(run(s, 'QnaList', { search: '', searchnum: '0' }).model.list.length, 5);
+  assert.equal(run(s, 'QnaList', { search: '', searchnum: '0' }).model.list.length, 2);
   assert.equal(run(s, 'QnaModify', { no: '2', step: '0' }).alert, '자신이 쓴 질문만 수정할 수 있습니다.');
   s = run(s, 'QnaModify', { no: '5', step: '1', title: '고친 질문', cont: '고친 내용' }).state;
   assert.equal(s.qna.find((q) => q.no === 5).title, '고친 질문');
@@ -193,7 +193,7 @@ test('로그인: 원본 check 코드(2 비밀번호 틀림, 3 아이디 없음)�
   assert.equal(run(s, 'Login', { check: '0', id: 'nobody', pwd: 'demo' }).model.check, '3');
   assert.equal(run(s, 'Login', { check: '0', id: 'leader01', pwd: 'x' }).model.check, '2');
   const ok = run(s, 'Login', { check: '0', id: 'leader01', pwd: 'demo' });
-  assert.deepEqual(ok.state.session, { id: 'leader01', name: '데모팀장', auth: '1' });
+  assert.deepEqual(ok.state.session, { id: 'leader01', name: '데모팀장', auth: '1', expiresAt: NOW.getTime() + 3600000 });
   assert.deepEqual(run(ok.state, 'Logout').state.session, {});
   assert.equal(run(as('leader01'), 'MyPage').model.resultClass.pwd, '********', '비밀번호는 화면에 보이지 않는다');
 });

@@ -4,6 +4,10 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
 
+ <filter><filter-name>security</filter-name><filter-class>security.RequestGuard</filter-class></filter>
+ <filter-mapping><filter-name>security</filter-name><url-pattern>/*</url-pattern></filter-mapping>
+ <session-config><session-timeout>30</session-timeout></session-config>
+
 	<!-- 타일즈 설정 -->
 	<servlet>
 		<servlet-name>tiles</servlet-name>
@@ -55,4 +59,4 @@
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
-</web-app>
+<servlet><servlet-name>competitionImage</servlet-name><servlet-class>security.CompetitionImageServlet</servlet-class></servlet><servlet-mapping><servlet-name>competitionImage</servlet-name><url-pattern>/competition-image</url-pattern></servlet-mapping></web-app>

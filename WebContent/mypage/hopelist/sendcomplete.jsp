@@ -21,12 +21,12 @@
 	  <div class="table board_list">
 		 <table class="tstyle_list">
 			<tr>
-			   <th><strong>신청 완료</strong></th>
+			   <th><strong>참여 신청을 저장했습니다</strong></th>
 			</tr>
 			
 			<tr align="center">	
 						<td colspan="6">
-							<s:property value="pagingHtml" escape="false"/>
+							<p>상대방이 수락하면 내 프로젝트에서 참여 상태를 확인할 수 있습니다.</p>
 						</td>
 			</tr>
 			
@@ -34,7 +34,7 @@
 		
 		
 				<div class="board_search">
-					<input type="button"  value="돌아가기" onclick="javascript:location.href='MyPage.action'"/>
+					<input type="button"  value="내 프로젝트 확인" onclick="javascript:location.href='MyProjList.action'"/>
 				</div>
 			</div>
 		</div>

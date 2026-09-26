@@ -84,7 +84,7 @@
 					<td><s:property value="presultClass.enddate" /></td>
 				</tr>
 				<tr>
-					<td class="list">현재모집인원/모집인원</td>
+					<td class="list">현재 참여 / 추가 모집</td>
 					<td><s:property value="presultClass.currmem" />/<s:property value="presultClass.recmem" /></td>
 				</tr>
 				<tr>
@@ -101,7 +101,7 @@
 				</tr>
 				<tr>
 					<td class="list">임금</td>
-					<td><s:property value="presultClass.sal" /></td>
+					<td><s:if test="presultClass.sal == null || presultClass.sal == ''">정보 없음</s:if><s:elseif test="presultClass.sal == '0'">무급</s:elseif><s:else><s:property value="presultClass.sal" />원</s:else></td>
 				</tr>
 				
 				<tr>

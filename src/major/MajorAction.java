@@ -19,9 +19,7 @@ public class MajorAction extends ActionSupport {
 	private String search;
 	
 	public MajorAction() throws IOException {
-		reader = Resources.getResourceAsReader("sqlMapConfig.xml");
-		sqlMapper = SqlMapClientBuilder.buildSqlMapClient(reader);
-		reader.close();
+		sqlMapper = security.Database.client();
 	}
 	
 	public String execute() throws Exception {

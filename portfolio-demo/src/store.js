@@ -1,3 +1,4 @@
+import { migrate } from './full-actions.js';
 // 브라우저 localStorage 에만 저장한다. 서버로 보내는 곳은 없다.
 import { seedState } from './fixtures.js';
 
@@ -9,7 +10,7 @@ export function loadState(storage) {
     if (!raw) return { state: seedState(), restored: false };
     const state = JSON.parse(raw);
     if (!state || state.version !== 1 || !Array.isArray(state.projectteam)) throw new Error('형식이 다릅니다');
-    return { state, restored: true };
+    return { state: migrate(state), restored: true };
   } catch (e) {
     storage.removeItem(STORAGE_KEY);
     return { state: seedState(), restored: false, error: e };

@@ -74,76 +74,37 @@
 	  </div>
    </div>
 	  <div class="wrap">
-		<form action="ProjList.action" method="post" name="form" enctype="multipart/form-data" >
-		 <table class="searchtable">
-			<tr>
-			   <td>
-					 <div class="selectbox">
-						대회/공모
-						<select name="comp">
-							  <option value="0">--선택--</option>
-						
-						<s:iterator value="complist" status="stat">
-							<option><s:property value="%{complist[#stat.index]}"/></option> 
-						</s:iterator>
-						
-						</select>
-						&nbsp; | &nbsp;
-						지역
-						<select name="loc">
-						<option value="0">--선택--</option>
-						
-						<s:iterator value="loclist" status="stat">
-							<option><s:property value="%{loclist[#stat.index]}"/></option> 
-						</s:iterator>
-						
-						</select>
-						&nbsp; | &nbsp;
-						전공
-						<select name="maj">
-							  <option value="0">--선택--</option>
-						
-						<s:iterator value="majlist" status="stat">
-							<option><s:property value="%{majlist[#stat.index]}"/></option> 
-						
-						</s:iterator>
-						</select>
-					 </div>
-					 <s:submit theme="simple" value="필터 적용"/>
-				  <!-- </form> -->
-				  
-			   </td>
-			</tr>
-			<tr style="float:right;">
-			   <td colspan="6">
-				 <!-- <form action="ProjList.action" method="post" name="form" enctype="multipart/form-data" > -->
-						 <%-- styleId="proj" --%> 
-					<select name="searchnum">
-						<option value="0">프로젝트명</option>
-						<option value="1">팀장ID</option> 
-					</select>
-					<s:textfield name="search" theme="simple" value="" cssStyle=" width: 200px; height: 20px; border-radius: 0;"/>	
-						<input name="submit" type="submit" value="검색하기" class="submit"/>
-			   </td>
-			</tr>
-		 </table>
-		</form>
+<form action="ProjList.action" method="get" class="sm-project-search">
+ <div class="sm-search-line">
+  <label>검색 기준 <select name="searchnum"><option value="0">프로젝트명</option><option value="1" <s:if test="searchnum == 1">selected="selected"</s:if>>팀장ID</option></select></label>
+  <label class="sm-query">검색어 <input type="text" name="search" value="<s:property value='search'/>" placeholder="프로젝트명 또는 팀장ID"/></label>
+  <button type="submit">검색하기</button><a href="ProjList.action">조건 초기화</a>
+ </div>
+ <details class="sm-filters"><summary>지역·전공·대회 필터</summary><p>검색어를 입력하면 검색어로 찾고, 비우면 아래 필터를 적용합니다.</p>
+ <div class="sm-search-line">
+ <label>대회/공모 <select name="comp"><option value="0">전체 대회</option><s:iterator value="complist" status="stat"><option <s:if test="comp == complist[#stat.index]">selected="selected"</s:if>><s:property value="%{complist[#stat.index]}"/></option></s:iterator></select></label>
+ <label>지역 <select name="loc"><option value="0">전체 지역</option><s:iterator value="loclist" status="stat"><option <s:if test="loc == loclist[#stat.index]">selected="selected"</s:if>><s:property value="%{loclist[#stat.index]}"/></option></s:iterator></select></label>
+ <label>전공 <select name="maj"><option value="0">전체 전공</option><s:iterator value="majlist" status="stat"><option <s:if test="maj == majlist[#stat.index]">selected="selected"</s:if>><s:property value="%{majlist[#stat.index]}"/></option></s:iterator></select></label>
+ <button type="submit">필터 적용</button>
+ </div></details>
+</form>
+<p class="sm-results" role="status">검색 결과 <s:property value="totalCount"/>개 · 모집 인원은 앞으로 합류할 수 있는 인원입니다.</p>
 		<form action="favProj.action">
-		 <table class="listtable">
+		 <table class="listtable sm-project-list">
 			<tr class="list_title">
 			 	<td><strong>팀장ID</strong></td>
 			   <td><strong>프로젝트명</strong></td>
 			   <td><strong>대회/공모</strong></td>
 			   <td><strong>전공</strong></td>
 			   <td><strong>프로젝트 기간</strong></td>
-			   <td><strong>현재모집인원/모집인원</strong></td>
+			   <td><strong>현재 참여 / 추가 모집</strong></td>
 			   <td><strong>지역</strong></td>
 			   <td><strong>임금</strong></td>
 			</tr>
 			
 			<s:if test="list.size()<=0">
 			   <tr class="no">
-				  <td colspan="3">등록된 게시물이 없습니다.</td>
+				  <td colspan="8">등록된 게시물이 없습니다.</td>
 			   </tr>
 			</s:if>
 			
@@ -166,30 +127,30 @@
 			   <tr class="list">
 				  <s:hidden value="teamno"/>
 				  <s:hidden value="leaderid"/>
-				 <td>
+				 <td data-label="팀장 / 스크랩">
 					  <s:if test="#session.auth == 2">
 						  <s:checkbox theme="simple" name="teamno" fieldValue="%{teamno}"/>
 					  </s:if>
 					  <s:property value="leaderid" />
 				  </td>
-				  <td><s:a href="%{viewURL}"><s:property value="title" /></s:a></td>
-				  <td><s:property value="comp" /></td>
-				  <td><s:property value="maj" /></td>
-				  <td><s:property value="startdate" /> ~ <s:property value="enddate"/></td>
-				  <td><s:property value="currmem"/>/<s:property value="recmem" /></td>
-				  <td><s:property value="loc" /></td>
-				  <td><s:property value="sal" /></td>
+				  <td data-label="프로젝트" class="sm-project-name"><s:a href="%{viewURL}"><s:property value="title" /></s:a></td>
+				  <td data-label="대회/공모"><s:property value="comp" /></td>
+				  <td data-label="전공"><s:property value="maj" /></td>
+				  <td data-label="기간"><s:property value="startdate" /> ~ <s:property value="enddate"/></td>
+				  <td data-label="모집 상태">현재 <s:property value="currmem"/>명 · <s:if test="recmem > 0">추가 <s:property value="recmem"/>명</s:if><s:else><strong>모집 마감</strong></s:else></td>
+				  <td data-label="지역"><s:property value="loc" /></td>
+				  <td data-label="임금"><s:if test="sal == null || sal == ''">정보 없음</s:if><s:elseif test="sal == '0'">무급</s:elseif><s:else><s:property value="sal"/>원</s:else></td>
 			   </tr>
 			</s:iterator>
 				<tr>
-				   <td colspan="7">
+				   <td colspan="8">
 					  <s:property value="pagingHtml" escape="false"/>
 				   </td>
 				</tr>
 				 
 				<s:if test="#session.auth == 2">	<!-- 팀원 -->
 					<tr class="btn">
-					   <td colspan="7">
+					   <td colspan="8">
 						  <input type="submit" value="스크랩하기"/>
 					   </td>
 					</tr>

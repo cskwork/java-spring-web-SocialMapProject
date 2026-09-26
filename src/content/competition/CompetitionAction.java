@@ -43,7 +43,7 @@ public class CompetitionAction extends ActionSupport {
 	private boolean check;
 	private String img; // 이미지 업로드 파일 이름
 	private File upload; // 이미지 파일
-	private String fileUploadPath = "..\\App\\SocialMap\\WebContent\\upload\\"; // 이미지 업로드 파일 경로
+	private String fileUploadPath = ""; // 이미지 업로드 파일 경로
 	Calendar today = Calendar.getInstance();
 	
 	private PagingAction page;
@@ -58,9 +58,7 @@ public class CompetitionAction extends ActionSupport {
 	private String name;
 
 	public CompetitionAction() throws IOException {
-		reader = Resources.getResourceAsReader("sqlMapConfig.xml");
-		sqlMapper = SqlMapClientBuilder.buildSqlMapClient(reader);
-		reader.close();
+		sqlMapper = security.Database.client();
 	}
 
 	public String execute() throws Exception {
@@ -119,118 +117,34 @@ public class CompetitionAction extends ActionSupport {
 		}
 	}
 
-	public String write() throws Exception {
-		System.out.println(System.getProperty("user.dir"));
-		
-		if (step == 1) {
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
-			Date start = null;
-			Date end = null;
-
-			paramClass = new CompetitionVO();
-
-			if (!getStartdate().equals("")) {
-				start = format.parse(getStartdate() + " 00:00:00");
-			}
-			if (!getEnddate().equals("")) {
-				end = format.parse(getEnddate() + " 23:59:59");
-			}
-			if (isCheck() == true) {
-				paramClass.setShowlog(1);
-			} else {
-				paramClass.setShowlog(0);
-			}
-
-			paramClass.setRegdate(today.getTime());
-			paramClass.setTitle(getTitle());
-			paramClass.setStartdate(start);
-			paramClass.setEnddate(end);
-			paramClass.setCont(getCont());
-			paramClass.setContadd(getContadd());
-
-			sqlMapper.insert("content.insertComp", paramClass);
-
-			// 이미지 파일 업로드
-			if (getUpload() != null) {
-				resultClass = (CompetitionVO) sqlMapper.queryForObject("content.selectLastNo");
-
-				File destFile = new File(fileUploadPath + "file_" + resultClass.getNo() + ".PNG");
-				FileUtils.copyFile(getUpload(), destFile);
-
-				paramClass.setNo(resultClass.getNo());
-				paramClass.setImg("file_" + resultClass.getNo() + ".PNG");
-
-				sqlMapper.update("content.updateFile", paramClass);
-			}
-			setStep(2);
-
-			return SUCCESS;
-		} else {
-			return SUCCESS;
-		}
-	}
-
-	public String delete() throws Exception {
-		File deleteFile = new File(fileUploadPath + "file_" + getNo() + ".PNG");
-
-		deleteFile.delete();
-
-		sqlMapper.delete("content.deleteComp", getNo());
-
-		return SUCCESS;
-	}
-
-	public String modify() throws Exception {
-		paramClass = new CompetitionVO();
-
-		if (step == 1) {
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			Date start = null;
-			Date end = null;
-
-			if (!getStartdate().equals("")) {
-				start = format.parse(getStartdate() + " 00:00:00");
-			}
-			if (!getEnddate().equals("")) {
-				end = format.parse(getEnddate() + " 23:59:59");
-			}
-			if (isCheck() == true) {
-				paramClass.setShowlog(1);
-			} else {
-				paramClass.setShowlog(0);
-			}
-
-			paramClass.setRegdate(today.getTime());
-			paramClass.setTitle(getTitle());
-			paramClass.setStartdate(start);
-			paramClass.setEnddate(end);
-			paramClass.setCont(getCont());
-			paramClass.setContadd(getContadd());
-			paramClass.setNo(getNo());
-
-			sqlMapper.update("content.updateComp", paramClass);
-
-			if (getUpload() != null) { // 이미지 파일 업로드
-				File destFile = new File(fileUploadPath + "file_" + getNo() + ".PNG");
-				FileUtils.copyFile(getUpload(), destFile);
-
-				paramClass.setImg("file_" + getNo() + ".PNG");
-
-				sqlMapper.update("content.updateFile", paramClass);
-			}
-
-			setStep(2);
-
-			return SUCCESS;
-		} else {
-			paramClass.setNo(getNo());
-
-			resultClass = (CompetitionVO) sqlMapper.queryForObject("content.selectComp", paramClass);
-
-			return SUCCESS;
-		}
-	}
+ private String fixture; private String actionName="CompWrite";
+ public String getAction(){return actionName;} public String getHeading(){return "Competition";}
+ public String getFixture(){return fixture;} public void setFixture(String value){fixture=value;}
+ private void validateInput() {
+  security.Service.require(title!=null&&!title.trim().isEmpty()&&title.length()<=100&&cont!=null&&!cont.trim().isEmpty()&&cont.length()<=4000,"Title and content required");
+  security.Service.require(fixture==null||fixture.length()==0||fixture.equals("fixture-poster.svg")||fixture.equals("fixture-guide.txt"),"Unknown fixture attachment");
+ }
+ public String write() throws Exception {
+  if(step!=1)return SUCCESS;validateInput();
+  String uploaded=security.ImageUploads.persist(org.apache.struts2.ServletActionContext.getRequest());if(uploaded!=null)fixture=uploaded;
+  security.Service.changed(security.Service.update("insert into competition(no,title,cont,startdate,enddate,regdate,showlog,hits,img) values(competition_seq.nextval,?,?,?,?,CURRENT_TIMESTAMP,1,0,?)",title,cont,parseDate(startdate),parseDate(enddate),fixture));step=2;return "list";
+ }
+ private java.sql.Date parseDate(String value){return value==null||value.length()==0?null:java.sql.Date.valueOf(value);}
+ public String modify() throws Exception {
+  actionName="CompModify";
+  paramClass=new CompetitionVO();paramClass.setNo(no);resultClass=(CompetitionVO)sqlMapper.queryForObject("content.selectComp",paramClass);
+  security.Service.require(resultClass!=null,"Competition missing");if(step!=1)return SUCCESS;validateInput();
+  String uploaded=security.ImageUploads.persist(org.apache.struts2.ServletActionContext.getRequest());
+  if(uploaded!=null){fixture=uploaded;security.ImageUploads.retire(org.apache.struts2.ServletActionContext.getRequest(),resultClass.getImg());}
+  else if(fixture==null||fixture.length()==0)fixture=resultClass.getImg();
+  else if(!fixture.equals(resultClass.getImg()))security.ImageUploads.retire(org.apache.struts2.ServletActionContext.getRequest(),resultClass.getImg());
+  security.Service.changed(security.Service.update("update competition set title=?,cont=?,startdate=?,enddate=?,img=? where no=?",title,cont,parseDate(startdate),parseDate(enddate),fixture,no));step=2;return "list";
+ }
+ public String delete() throws Exception {
+  security.Service.require(security.Service.one("select p.teamno from projectteam p join competition c on c.title=p.comp where c.no=?",no)==null,"Competition is referenced by a project");
+  java.util.Map row=security.Service.one("select img from competition where no=?",no);
+  security.Service.changed(security.Service.update("delete from competition where no=?",no));if(row!=null)security.ImageUploads.retire(org.apache.struts2.ServletActionContext.getRequest(),(String)row.get("img"));return SUCCESS;
+ }
 
 	public String getMainpage() {
 		return mainpage;
@@ -389,7 +303,7 @@ public class CompetitionAction extends ActionSupport {
 	}
 
 	public void setFileUploadPath(String fileUploadPath) {
-		this.fileUploadPath = fileUploadPath;
+		throw new SecurityException("Filesystem destinations cannot be set by requests");
 	}
 
 	public PagingAction getPage() {

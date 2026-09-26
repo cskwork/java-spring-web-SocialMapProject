@@ -109,7 +109,7 @@ const UI_ATTRS = {
 };
 
 function applyTransforms(text, log) {
-  let out = text;
+  let out = text.replace(/<p><a href="competition-image[^<]*(?:<s:property[^>]*\/>)[^>]*>등록 이미지 다운로드<\/a><\/p>/g, '').replace(/<label>공모전 이미지[^<]*<input type="file"[^>]*><\/label>/g, '<p>합성 데모에서는 아래 첨부 예제를 선택합니다.</p>').replace(/action="(<s:property[^>]*\/>\.action)/g, 'action="#/$1');
   for (const t of TRANSFORMS) {
     let n = 0;
     out = out.replace(t.pattern, (...args) => {

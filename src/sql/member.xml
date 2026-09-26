@@ -54,7 +54,7 @@
 	</update>
 	
 	<delete id="deleteMember" parameterClass="member">
-		delete from member where pwd=#pwd#
+		delete from member where id=#id# and pwd=#pwd#
 	</delete>
 	
 	<select id="checkPwd" parameterClass="member" resultClass="member">
@@ -62,44 +62,8 @@
 	</select>
 	
 	<update id="updateTeamNo" parameterClass="utn">
-		update member set 
-	 	<isEqual property="auth" compareValue="1">
-		 	<isLessThan property="teamno1" compareValue="1">
-		 	 	 teamno1=teamno1+(projectteam_seq.CURRVAL*1)
-			</isLessThan>
-		 	
-		 	<isLessThan property="teamno1" compareValue="10000">
-		 		<isGreaterThan property="teamno1" compareValue="1">
-		 	 		 teamno1=teamno1+(projectteam_seq.CURRVAL*10000)
-		 		</isGreaterThan>
-			 </isLessThan>
-			
-			<isLessThan property="teamno1" compareValue="100000000">
-		 		<isGreaterThan property="teamno1" compareValue="10000">
-		 	 		 teamno1=teamno1+(projectteam_seq.CURRVAL*100000000)
-		 		</isGreaterThan>
-			</isLessThan>
-		</isEqual>
-		
-		<isEqual property="auth" compareValue="2">
-		 	<isLessThan property="teamno1" compareValue="1">
-		 	 	 teamno1=teamno1+#teamno1#*1
-			</isLessThan>
-		 	
-		 	<isLessThan property="teamno1" compareValue="10000">
-		 		<isGreaterThan property="teamno1" compareValue="1">
-		 	 		 teamno1=teamno1+#teamno1#*10000
-		 		</isGreaterThan>
-			 </isLessThan>
-			
-			<isLessThan property="teamno1" compareValue="100000000">
-		 		<isGreaterThan property="teamno1" compareValue="10000">
-		 	 		 teamno1=teamno1+#teamno1#*100000000
-		 		</isGreaterThan>
-			</isLessThan>
-		</isEqual>
-		 where id=#id#
-	</update>
+ update member set teamno1=projectteam_seq.CURRVAL where id=#id# and (teamno1 is null or teamno1=0)
+ </update>
 	
 	
 	<!-- 평점 -->

@@ -56,9 +56,7 @@ public class ASNoticeAction extends ActionSupport {
 
 	//DB 연동
 	public ASNoticeAction() throws IOException {
-		reader = Resources.getResourceAsReader("sqlMapConfig.xml");
-		sqlMapper = SqlMapClientBuilder.buildSqlMapClient(reader);
-		reader.close();
+		sqlMapper = security.Database.client();
 	}
 
 	//리스트 조회

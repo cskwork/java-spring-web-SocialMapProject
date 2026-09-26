@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Calendar;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import content.project.ProjectTeamVO;
+import temp.SearchVO;
 
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -18,6 +22,20 @@ public class MemberAction extends ActionSupport {
 
 	// 페이지 관련
 	private String mainpage;
+    private List<ProjectTeamVO> featuredProjects = new ArrayList<ProjectTeamVO>();
+    public List<ProjectTeamVO> getFeaturedProjects() { return featuredProjects; }
+    private void loadFeaturedProjects() throws java.sql.SQLException {
+        List<ProjectTeamVO> projects = sqlMapper.queryForList("content.selectProjList", new SearchVO());
+        featuredProjects.clear();
+        for (ProjectTeamVO project : projects) {
+            String remaining = project.getRecmem();
+            if (remaining != null && remaining.matches("[0-9]+") && Integer.parseInt(remaining) > 0) {
+                featuredProjects.add(project);
+                if (featuredProjects.size() == 3) break;
+            }
+        }
+    }
+
 
 	// 로그인 관련
 	private MemberVO paramClass; // 파라미터를 저장할 객체
@@ -49,9 +67,7 @@ public class MemberAction extends ActionSupport {
 	
 	// 생성자
 	public MemberAction() throws IOException {
-		reader = Resources.getResourceAsReader("sqlMapConfig.xml"); // sqlMapConfig.xml 파일의 설정내용을 가져온다.
-		sqlMapper = SqlMapClientBuilder.buildSqlMapClient(reader); // sqlMapConfig.xml의 내용을 적용한 sqlMapper 객체 생성.
-		reader.close();
+		sqlMapper = security.Database.client();
 	}	
 	// 홈페이지
 	public String home() throws Exception {
@@ -71,6 +87,7 @@ public class MemberAction extends ActionSupport {
 	      }*/
 	      
 	      setMainpage("main");
+              loadFeaturedProjects();
 	      
 	      return SUCCESS;
 	  }
@@ -105,19 +122,27 @@ public class MemberAction extends ActionSupport {
 			if (resultClass == null || resultClass.getPwd().equals("")) {
 				check = "3";
 			} else {
-				if (resultClass.getPwd().equals(getPwd())) {
+				if (security.Passwords.verify(getPwd(), resultClass.getPwd())) {
+                    javax.servlet.http.HttpServletRequest request=org.apache.struts2.ServletActionContext.getRequest();
+                    request.getSession().invalidate();request.getSession(true).setAttribute("csrf",security.Passwords.token());
+                    org.apache.struts2.ServletActionContext.getResponse().setHeader("X-SocialMap-CSRF",String.valueOf(request.getSession().getAttribute("csrf")));
+                    ActionContext.getContext().setSession(new org.apache.struts2.dispatcher.SessionMap(request));
 					ActionContext context = ActionContext.getContext();
 					Map<String, String> session = (Map<String, String>) context.getSession();
 					
 					if(resultClass.getAuth().equals("0")) {
-						session.put("auth", resultClass.getAuth());
+						session.put("id", resultClass.getId());
+                        session.put("name", resultClass.getName());
+                        session.put("auth", resultClass.getAuth());
 						context.setSession(session);
 						
 						return "admin";
 					} else {
 						session.put("id", getId());
 						session.put("name", resultClass.getName());
-						session.put("auth", resultClass.getAuth());
+						session.put("id", resultClass.getId());
+                        session.put("name", resultClass.getName());
+                        session.put("auth", resultClass.getAuth());
 						
 						context.setSession(session);
 						
@@ -126,6 +151,7 @@ public class MemberAction extends ActionSupport {
 						setAuth(session.get("auth"));
 	
 						setMainpage("main");
+              loadFeaturedProjects();
 						
 						return SUCCESS;
 					}
@@ -161,14 +187,16 @@ public class MemberAction extends ActionSupport {
 		} else {
 			paramClass = new MemberVO();
 
-			paramClass.setId(getId()); //
-			paramClass.setPwd(getPwd()); //
+			security.Service.require(getId()!=null && getId().matches("[A-Za-z0-9_]{4,24}") && getEmail()!=null && getEmail().matches("[^@ ]+@[^@ ]+\\.[^@ ]+") && getName()!=null && getName().trim().length()>0,"Invalid signup input");
+            paramClass.setId(getId()); //
+			paramClass.setPwd(security.Passwords.hash(getPwd())); //
 			paramClass.setName(getName()); //
 			paramClass.setBirth(getBirth()); //
 			paramClass.setGen(getGen()); //
 			paramClass.setEmail(getEmail()); //
 			paramClass.setAddr(getAddr()); //
-			paramClass.setAuth(getAuth()); //
+			security.Service.require("1".equals(getAuth()) || "2".equals(getAuth()), "Invalid signup role");
+            paramClass.setAuth(getAuth()); //
 			paramClass.setMaj(getMaj()); //
 			paramClass.setExp(getExp()); //
 
@@ -187,45 +215,16 @@ public class MemberAction extends ActionSupport {
 	}
 
 	// 회원 찾기(= 회원 아이디 찾기 쿼리문)
-	public String find() throws Exception {
-		if (getStep() == 0) {
-			if (getFind().equals("id")) {
-				setMainpage("findid");
-			} else if (getFind().equals("pwd")) {
-				setMainpage("findpwd");
-			}
-		} else {
-			paramClass = new MemberVO();
-
-			paramClass.setId(getId());
-			paramClass.setName(getName());
-			paramClass.setEmail(getEmail());
-			paramClass.setEmail(getEmail());
-			paramClass.setBirth(getBirth());
-
-			String[] sql = { "member.findIdMember", "member.findPwdMember" };
-
-			resultClass = (MemberVO) sqlMapper.queryForObject(sql[getStep() - 1], paramClass);
-
-			if (resultClass == null || resultClass.getPwd().equals("")) {
-				check = "2";
-
-				// 정보 불일치
-				if (getStep() == 1) {
-					setMainpage("findid");
-				} else if (getStep() == 2) {
-					setMainpage("findpwd");
-				}
-			} else {
-				check = "1";
-				// 정보 일치
-				setMainpage("findresult");
-			}
-		}
-		return SUCCESS;
-	}
-	
-	
+ public String find() throws Exception {
+   setMainpage("id".equals(getFind()) ? "findid" : "findpwd");
+   if (getStep() > 0) {
+    if ("id".equals(getFind())) {
+     java.util.Map row=security.Service.one("select id from member where name=? and email=?",getName(),getEmail());
+     if(row!=null)security.Service.update("insert into local_outbox(id,token,created_at) values(?,?,CURRENT_TIMESTAMP)",row.get("id"),"ID_RECOVERY");
+    } else security.Service.requestReset(getId(), getEmail());
+   }
+   resultClass = null; return SUCCESS;
+ }
 
 	// getter, setter
 	public int getCheckdate() {

@@ -12,7 +12,7 @@ const DIST = join(DEMO_ROOT, 'dist');
 
 // 데모에서 그리지 않는 mainpage (도달하는 액션이 모두 UNAVAILABLE)
 const EXCLUDED_MAINPAGES = {
-  signup: 'SignUp 액션 미제공', findid: 'Find 액션 미제공', findpwd: 'Find 액션 미제공', findresult: 'Find 액션 미제공',
+
   myprojmodify: '원본에서 이 mainpage를 설정하는 액션이 없음 (프로젝트 수정은 ProjModify → projwrite)',
 };
 const SHELL = { top: 'top/top.jsp', right: 'right/right.jsp', bottom: 'bottom/bottom.jsp' };
@@ -146,12 +146,12 @@ ${scripts.map((s) => `<script src="${s}"></script>`).join('\n')}
 <body>
 <!-- 원본 Homepage/homepage.jsp 의 Tiles 배치: top · (본문 + floatMenu[right]) · bottom -->
 <div id="sm-top"></div>
+<div id="sm-demo-bar" role="region" aria-label="데모 안내"><p class="sm-demo-notice"><strong>원본 프로젝트 기반 데모 · 모의 데이터 · 신청·글은 외부로 전송되지 않습니다</strong></p></div>
 <div>
 <main id="sm-main" tabindex="-1"><noscript><p>이 데모는 자바스크립트가 필요합니다.</p></noscript></main>
 <div class="floatMenu" id="sm-right"></div>
 </div>
 <div id="sm-bottom"></div>
-<div id="sm-demo-bar" role="region" aria-label="데모 안내"><p class="sm-demo-notice"><strong>원본 프로젝트 기반 데모 · 모의 데이터 · 신청·글은 외부로 전송되지 않습니다</strong></p></div>
 <dialog id="sm-popup" aria-labelledby="sm-popup-title"><div class="sm-popup-head"><strong class="sm-popup-title" id="sm-popup-title"></strong><button type="button" onclick="SM.closePopup()" aria-label="닫기">×</button></div><div class="sm-popup-body"></div></dialog>
 <div id="sm-toast" aria-live="polite"></div>
 </body>

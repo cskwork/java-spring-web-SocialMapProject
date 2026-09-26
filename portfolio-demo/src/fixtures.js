@@ -5,6 +5,7 @@
 
 // 데모 로그인 계정 (비밀번호는 모두 demo)
 export const DEMO_ACCOUNTS = [
+  { id: 'admin', label: '관리자' },
   { id: 'leader01', label: '팀장 (진행 중 프로젝트 있음)' },
   { id: 'leader02', label: '팀장 (새 프로젝트 등록 가능)' },
   { id: 'member01', label: '팀원(프리랜서)' },
@@ -27,6 +28,7 @@ export function seedState() {
     major: ['경영학', '국어국문학', '미디어커뮤니케이션', '산업디자인', '소프트웨어공학', '시각디자인', '영상학', '전자공학', '컴퓨터공학', '통계학']
       .map((major_name, i) => ({ major_no: i + 1, major_name })),
     member: [
+      member('admin', '가상관리자', '0', null, '서울', '', ''),
       member('leader01', '데모팀장', '1', '1', '서울', '컴퓨터공학', '웹 서비스 개발 3년, 교내 공모전 팀장 경험'),
       member('leader02', '신규팀장', '1', null, '경기도', '경영학', '창업 동아리 기획 담당'),
       member('member01', '데모팀원', '2', null, '경기도', '시각디자인', 'UI 디자인 공모전 2회 참여'),
@@ -103,9 +105,9 @@ export function seedState() {
     ],
     // custlog 0: 공지사항, 1: FAQ
     custservice: [
-      { no: 1, custlog: 0, title: 'SocialMap 데모 안내', cont: '이 사이트는 원본 SocialMap 프로젝트 화면을 그대로 옮긴 데모입니다. 모든 데이터는 가상이며, 신청·글은 이 브라우저에만 저장됩니다.', regdate: '2026-09-20', hits: 12 },
+      { no: 1, custlog: 0, title: 'SocialMap 데모 안내', cont: '이 사이트는 원본 SocialMap 업무를 새 화면으로 구성한 데모입니다. 모든 데이터는 가상이며, 신청·글은 이 브라우저에만 저장됩니다.', regdate: '2026-09-20', hits: 12 },
       { no: 2, custlog: 0, title: '프로젝트 참여 규칙 안내', cont: '한 사람은 동시에 하나의 프로젝트만 진행할 수 있습니다. 팀장은 진행 중인 프로젝트가 있으면 새 프로젝트를 등록할 수 없습니다.', regdate: '2026-09-22', hits: 8 },
-      { no: 3, custlog: 0, title: '쪽지·평점 기능 안내', cont: '데모에서는 다른 사람에게 쪽지를 보내거나 평점을 남기는 기능을 제공하지 않습니다.', regdate: '2026-09-24', hits: 3 },
+      { no: 3, custlog: 0, title: '쪽지·평점 기능 안내', cont: '합성 계정끼리 쪽지를 보내고, 함께 완료한 프로젝트의 동료에게 평점을 남길 수 있습니다. 외부 전송은 없습니다.', regdate: '2026-09-24', hits: 3 },
       { no: 4, custlog: 1, title: '프로젝트는 어떻게 등록하나요?', cont: '팀장 계정으로 로그인한 뒤 메인의 "프로젝트 등록하기" 또는 프로젝트 목록의 "글쓰기"를 누릅니다.', regdate: '2026-09-18', hits: 0 },
       { no: 5, custlog: 1, title: '프로젝트에 참여하려면?', cont: '팀원 계정으로 프로젝트 상세에서 "프로젝트 참여 희망"을 누르면 팀장의 마이페이지 > 참여 희망자에 올라갑니다. 팀장이 수락하면 팀에 합류합니다.', regdate: '2026-09-18', hits: 0 },
       { no: 6, custlog: 1, title: '팀원을 찾는 방법은?', cont: '프리랜서 찾기에서 지역·전공으로 거르고, 상세보기에서 "프로젝트 참여 권유"를 보낼 수 있습니다.', regdate: '2026-09-18', hits: 0 },

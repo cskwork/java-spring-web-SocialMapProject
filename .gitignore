@@ -1,0 +1,6 @@
+native/build/
+build/
+portfolio-demo/dist/
+.env
+.env.local
+.env.*.local

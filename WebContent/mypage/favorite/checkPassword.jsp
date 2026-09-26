@@ -1,32 +1,3 @@
-<%@ taglib prefix="s" uri="/struts-tags"%>
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-<title>비밀번호 확인</title>
-</head>
-<body>
-<h2>비밀번호 확인</h2>
-
-<form action="checkPwd.action" method="post">
-	<table width="250" border="0" cellspacing="0" cellpadding="0">
-		<tr bgcolor="#777777">
-			<td height="1" colspan="2"></td>
-		</tr>
-		<tr>
-			<td width="100" bgcolor="f4f4f4">비밀번호 입력</td>
-			<td width="150" bgcolor="#ffffff">
-			<s:hidden value="resultClass.id"/>
-				&nbsp;&nbsp;<s:textfield name="pwd" theme="simple" cssStyle="width:100px" maxlength="20" />
-				&nbsp;&nbsp;<input name="submit" type="submit" value="확인" class="inputb">
-			</td>
-		</tr>
-		<tr bgcolor="#777777">
-			<td height="1" colspan="2"></td>
-		</tr>
-	</table>
-</form>
-</body>
-</html>
+<%@ page contentType="text/html; charset=EUC-KR" pageEncoding="EUC-KR" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<html lang="ko"><head><title>회원 탈퇴 · SocialMap</title></head><body><section class="sm-workspace"><header class="sm-page-heading"><h2>회원 탈퇴</h2></header><form method="post" action="checkPwd.action"><input type="hidden" name="csrf" value="<s:property value="#session.csrf"/>"><input type="hidden" name="step" value="1"><label>본인 비밀번호 확인<input type="password" name="pwd" value="<s:property value="resultClass.pwd"/>" required></label><button type="submit">저장</button></form><s:if test="verified"><p>확인이 완료되었습니다. 진행 중인 프로젝트가 없어야 탈퇴할 수 있습니다.</p><form method="post" action="deleteMember.action"><input type="hidden" name="csrf" value="<s:property value="#session.csrf"/>"><input type="hidden" name="step" value="1"><p>회원 정보와 개인 스크랩을 삭제합니다.</p><button type="submit">저장</button></form></s:if></section></body></html>
