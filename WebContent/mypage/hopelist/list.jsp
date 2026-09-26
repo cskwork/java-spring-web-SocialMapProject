@@ -63,12 +63,14 @@
 		 <table class="tstyle_list">
 			<tr>
 			   <th><strong>보낸 사람 ID</strong></th>
+			   <th><strong>신청일</strong></th>
+			   <th><strong>전공 · 경력</strong></th>
 			   <th><strong>수락여부</strong></th>
 			</tr>
 			
 			<s:if test="list.size()==0">
 			   <tr class="no">
-				  <td colspan="3">등록된 게시물이 없습니다.</td>
+				  <td colspan="4">받은 신청이 없습니다.</td>
 			   </tr>
 			</s:if>
 			
@@ -76,7 +78,9 @@
 			   <tr class="a">
 			   	  <s:hidden value="no"/>
 			   	  <s:hidden value="getid"/>
-				  <td><s:property value="sendid" /></td>
+				  <td><s:property value="sendid" /> <span class="sm-sub"><s:property value="sendername" /></span></td>
+				  <td><s:property value="regdate" /></td>
+				  <td><s:property value="sendermaj" /><span class="sm-sub"><s:property value="senderexp" /></span></td>
 				  
 				  <s:if test="auth == 1">
 				  	<td><input type="button"  value="수락" onclick="javascript:location.href='insertTeam.action?no=${no}&id=${sendid}&leaderid=${getid}'"/> <!-- teamno 멤버테이블 추가 및 프로젝트 현인원 증가 -->
