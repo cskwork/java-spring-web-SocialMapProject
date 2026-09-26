@@ -36,11 +36,9 @@ public class PagingAction {
 		endCount = startCount + blockCount - 1;
 
 		// 시작 페이지와 마지막 페이지 계산
-		startPage = (int) ((currentPage - 1) / blockPage) * blockPage - 1;
-		if(startPage < 1)
-			startPage = 1;
-		
-		endPage = startCount + blockPage - 1;
+		startPage = (int) ((currentPage - 1) / blockPage) * blockPage + 1;
+
+		endPage = startPage + blockPage - 1;
 
 		// 마지막 페이지 > 전체 페이지 ? 전체페이지 : 마지막 페이지
 		if (endPage > totalPage)

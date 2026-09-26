@@ -59,6 +59,7 @@
                            <s:property value="no" />
                         </s:param>
                      </s:url>
+                     <s:if test="#session.auth == 0">
                      <s:if test="list.size() > 1">
                         <form action="QnaAdminModify.action" method="post">
                            <s:hidden name="id" value="%{resultClass1.id}" />
@@ -77,7 +78,11 @@
                            <input type="submit" value="답변등록"/>
                         </form>
                       </s:else>
+                     </s:if>
+                      <s:if test="id != null && id == resultClass1.id">
+                      <input type="button" value="질문수정" onClick="javascript:location.href='QnaModify.action?no=<s:property value="no" />&currentPage=<s:property value="currentPage" />'">
                       <input type="button" value="질문삭제" onClick="javascript:location.href='QnaDelete.action?no=<s:property value="no" />&currentPage=<s:property value="currentPage" />'">
+                      </s:if>
                      <input type="button" value="QnA목록" onClick="javascript:location.href='QnaList.action?currentPage=<s:property value="currentPage" />'">
                   </td>
                </tr>

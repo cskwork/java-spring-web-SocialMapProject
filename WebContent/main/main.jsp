@@ -72,8 +72,8 @@
 		<div class="wrap">
 			<div class="box">	
 				<div class="search">
-					<h3></h3>
-					<a class="" href=""> </a>
+					<h3>·Î±×ÀÎ</h3>
+					<a class="button-style1" href="Login.action">Read More</a>
 				</div>		
 			</div>
 			<div class="box">	

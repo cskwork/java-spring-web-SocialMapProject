@@ -68,7 +68,7 @@
 		<!-- HOPELIST -->
 		<put-attribute name="hopelist" 		value="/mypage/hopelist/list.jsp" />
 		<put-attribute name="deletehopelist" value="/mypage/hopelist/check.jsp" />
-		<put-attribute name="sendcomplete" 		value="/mypage/hopelist/list.jsp" />
+		<put-attribute name="sendcomplete" 		value="/mypage/hopelist/sendcomplete.jsp" />
 		
 		<put-attribute name="guide"       value="/guide/guideHome.jsp" />
       	<put-attribute name="guide1"       value="/guide/guideHome1.jsp" />

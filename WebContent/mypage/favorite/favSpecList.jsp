@@ -69,7 +69,7 @@
 					<tr>
 						<th scope="col">프리랜서ID</th>
 						<th scope="col">등록날짜</th>
-						<th scope="col">자격증</th>
+						<th scope="col">전공</th>
 						<th scope="col">프로젝트 경험</th>
 					</tr>
 					
@@ -94,8 +94,8 @@
 						<tr class="a">
 							<td><s:a  href="%{viewURL}"><s:property value="id"/></s:a></td>
 							<td><s:property value="regdate" /></td>
-							<td><s:property value="spec" /></td>
-							<td><s:property value="proexp" /></td>
+							<td><s:property value="maj" /></td>
+							<td><s:property value="exp" /></td>
 						</tr>
 					</s:iterator>
 					

@@ -63,7 +63,7 @@
 			
 		</table>
 				<div class="board_search">
-					<input type="button"  value="돌아가기" onclick="javascript:location.href='hopelist.action'"/>
+					<input type="button"  value="돌아가기" onclick="javascript:location.href='hopeList.action'"/>
 				</div>
 			</div>
 		</div>

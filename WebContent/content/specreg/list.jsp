@@ -69,7 +69,7 @@
 		var count = 0;
 		
 		function plusFun() {
-	         var form = eval("document.form");
+	         var form = document.form;
 	         
 	         if(document.getElementById('check').value == 1) {
 	            alert("이미 글이 등록되어있습니다.");
@@ -203,7 +203,7 @@
 				<s:if test="auth==1">
 				<tr class="btn">
 					<td colspan="4">
-						<input type="submit" value="스크랩하기" onclick="chkCount()"/>
+						<input type="submit" value="스크랩하기"/>
 					</td>
 				</tr>
 				</s:if>
