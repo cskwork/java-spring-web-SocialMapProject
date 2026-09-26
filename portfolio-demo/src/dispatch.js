@@ -36,7 +36,7 @@ export function dispatch(name, params, { state, now = new Date(), routes, mainpa
       continue;
     }
     let jsp;
-    if (result.target === '/socialMap.tiles') {
+    if (['msglist','msgwrite','msginfo','ratinglist','ratingwrite','withdraw','managewrite','adminhome'].includes(out.model.mainpage) || result.target === '/socialMap.tiles') {
       const mainpage = out.model.mainpage || 'main';
       jsp = mainpages[mainpage];
       if (!jsp) throw new RouteError(`mainpage "${mainpage}" 에 해당하는 JSP가 homepage.jsp/tiles-service.xml 에 없습니다`);

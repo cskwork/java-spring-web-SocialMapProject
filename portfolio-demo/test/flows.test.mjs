@@ -27,13 +27,18 @@ test('mainpage 표는 원본 homepage.jsp 분기와 tiles-service.xml에서 온�
   assert.equal(T.MAINPAGES.projlist, 'content/project/list.jsp');
   assert.equal(T.MAINPAGES.sendcomplete, 'mypage/hopelist/sendcomplete.jsp', '고친 tiles 설정');
   assert.equal(T.MAINPAGES.deletehopelist, 'mypage/hopelist/check.jsp', '고친 homepage 분기');
-  assert.equal(T.MAINPAGES.signup, undefined, '회원가입 화면은 빼 둔다');
+  assert.equal(T.MAINPAGES.signup, 'login/SignUp.jsp', '가입 화면을 원본 Tiles 경로로 복원');
 });
 
-test('비로그인 메인 → 역할별 메인 (원본 main.jsp 분기)', () => {
-  assert.match(go(seedState(), 'SocialMap').html, /<h3>로그인<\/h3>[\s\S]*<h3>가이드<\/h3>/);
-  assert.match(go(login('leader01'), 'SocialMap').html, /프리랜서찾기[\s\S]*프로젝트 등록하기/);
-  assert.match(go(login('member01'), 'SocialMap').html, /프로젝트찾기[\s\S]*스펙등록/);
+test('비로그인과 역할별 홈에서 모집 탐색과 실제 열린 프로젝트 3개를 제공한다', () => {
+  const home = go(seedState(), 'SocialMap');
+  assert.match(home.html, /#\/ProjList.action/);
+  assert.match(home.html, /#\/SpecList.action/);
+  assert.equal((home.html.match(/<article>/g) || []).length, 3);
+  assert.match(home.html, /반려식물 기록 앱/);
+  assert.doesNotMatch(home.html, /스마트 화분 IoT/);
+  assert.match(go(login('leader01'), 'SocialMap').html, /프로젝트 등록하기/);
+  assert.match(go(login('member01'), 'SocialMap').html, /내 스펙 등록하기/);
 });
 
 test('팀원: 상세 → 참여 희망 → 신청 완료 화면, 두 번째는 막힘', () => {
@@ -75,7 +80,7 @@ test('프로젝트 등록: 원본 write.jsp step 2 이동 스크립트와 list.j
   assert.match(form.scripts, /url="#\/Major\.action";\s*SM\.openPopup\(url/);
   const modify = go(login('leader01'), 'ProjModify', { teamno: '1', step: '0' });
   assert.match(modify.html, /<form action="#\/ProjModify\.action"/);
-  assert.match(modify.html, /name="maj" maxlength="50" value="컴퓨터공학, 시각디자인"/);
+  assert.match(modify.html, /name="maj" aria-label="모집전공" maxlength="50" value="컴퓨터공학, 시각디자인"/);
   assert.match(modify.html, /<input type="hidden" name="teamno" value="1">/);
 });
 
@@ -127,14 +132,13 @@ test('Q&A 상세: 관리자 답변 버튼은 숨기고 작성자에게만 수정
   assert.doesNotMatch(other.html, /질문삭제/);
 });
 
-test('미제공 기능은 이유와 함께 막힌다', () => {
+test('쪽지와 전체 업무 메뉴는 실제 화면으로 연결된다', () => {
   const out = go(login('member01'), 'MsgList');
-  assert.equal(out.kind, 'unavailable');
-  assert.match(out.reason, /쪽지/);
+  assert.equal(out.kind, 'page');
+  assert.match(out.html, /쪽지함/);
   const top = render(T.TEMPLATES['top/top.jsp'].template, {}, { id: 'member01', name: '데모팀원', auth: '2' });
-  assert.match(top, /SM\.openPopup\('#\/MsgList\.action'/);
-  assert.match(top, /<a href="#\/guideHome1\.action">프로젝트\/팀원 찾는방법<\/a>/);
-  assert.doesNotMatch(top, /href=""/, '빈 링크가 없다');
+  for (const name of ['MsgList','RatingList','MyProjList','hopeList','guideHome']) assert.ok(top.includes('#/'+name+'.action'));
+  assert.doesNotMatch(top, /href=""|데모 미제공/);
 });
 
 test('로그아웃하면 비로그인 메인으로 돌아온다', () => {
@@ -142,4 +146,19 @@ test('로그아웃하면 비로그인 메인으로 돌아온다', () => {
   assert.equal(out.jsp, 'main/main.jsp');
   assert.deepEqual(out.state.session, {});
   assert.equal(out.landing, 'SocialMap');
+});
+
+test('마감·임금 빈값·조건 복원이 원본 목록과 상세 HTML에 반영된다', () => {
+  const s = login('member01');
+  const closed = go(s, 'ProjInfo', { teamno: '11' });
+  assert.match(closed.html, /모집이 마감된 프로젝트/);
+  assert.doesNotMatch(closed.html, /value="프로젝트 참여 희망"/);
+  s.projectteam.find(p => p.teamno === '12').sal = '';
+  const list = go(s, 'ProjList', { loc: '제주도' });
+  assert.match(list.html, /selected="selected">제주도/);
+  assert.match(list.html, /정보 없음/);
+  assert.doesNotMatch(list.html, /무급/);
+  assert.match(go(s, 'ProjInfo', { teamno: '1' }).html, /무급/);
+  assert.match(list.html, /data-label="기간"/);
+  assert.match(list.html, /data-label="모집 상태"/);
 });

@@ -20,7 +20,7 @@
 			return true;
 		}
 	</script>
-</head>
+<link rel="stylesheet" href="css/desk.css" /><meta name="csrf-token" content="<s:property value="#session.csrf"/>"><script src="js/native-forms.js" defer></script></head>
 
 <body>
 	<s:if test="step == 2 && no == 0">

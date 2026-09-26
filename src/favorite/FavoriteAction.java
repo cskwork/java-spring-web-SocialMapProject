@@ -56,9 +56,7 @@ public class FavoriteAction extends ActionSupport {
 	private String auth;
 
 	public FavoriteAction() throws Exception {
-		reader = Resources.getResourceAsReader("sqlMapConfig.xml");
-		sqlMapper = SqlMapClientBuilder.buildSqlMapClient(reader);
-		reader.close();
+		sqlMapper = security.Database.client();
 	}
 
 	public String favspecList() throws Exception {

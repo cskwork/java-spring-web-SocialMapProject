@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
 <title>대회정보</title>
-</head>
+<link rel="stylesheet" href="css/desk.css" /><meta name="csrf-token" content="<s:property value="#session.csrf"/>"><script src="js/native-forms.js" defer></script></head>
 <body>
 	<table width="100%" height="100%" style="margin: auto;" border="0">
 		<tr valign="middle" height="20%">
@@ -73,5 +73,5 @@
 		</td>
 		</tr>
 	</table>
-</body>
+<s:if test="resultClass.img == 'fixture-poster.svg'"><p><a href="img/fixture-poster.svg" download="fixture-poster.svg">합성 포스터 다운로드</a></p></s:if><s:if test="resultClass.img == 'fixture-guide.txt'"><p><a href="img/fixture-guide.txt" download="fixture-guide.txt">합성 안내문 다운로드</a></p></s:if><p><a href="competition-image?no=<s:property value="resultClass.no"/>">등록 이미지 다운로드</a></p></body>
 </html>

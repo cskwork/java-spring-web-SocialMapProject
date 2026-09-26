@@ -2,11 +2,11 @@
 <!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
 	"http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
 <sqlMapConfig>
-	<properties resource="/dbconnect.properties" />
+
 	
 	<settings useStatementNamespaces="true"/>
 	
-	<transactionManager type="JDBC" commitRequired="false">
+	<transactionManager type="JDBC" commitRequired="true">
 		<dataSource type="SIMPLE">
 			<property name="JDBC.Driver" value="${driver}" />
 			<property name="JDBC.ConnectionURL" value="${url}" />
@@ -16,26 +16,26 @@
 	</transactionManager>
 	
 	<!-- 회원, 로그인 관련 -->
-	<sqlMap resource="/sql/member.xml"/>
+	<sqlMap resource="sql/member.xml"/>
 	
 	<!-- 전공 관련 -->
-	<sqlMap resource="/sql/major.xml"/>
+	<sqlMap resource="sql/major.xml"/>
 	
 	<!-- 유저용 게시판 관련 -->
-	<sqlMap resource="/sql/content.xml"/>
+	<sqlMap resource="sql/content.xml"/>
 	
 	<!-- 쪽지 관련 -->
-	<sqlMap resource="/sql/msg.xml"/>
+	<sqlMap resource="sql/msg.xml"/>
 	
 	<!-- 고객센터  -->
-	<sqlMap resource="/sql/custservice.xml" />
+	<sqlMap resource="sql/custservice.xml" />
 	
 	<!-- 스크랩 -->
-	<sqlMap resource="/sql/favorite.xml"/>
+	<sqlMap resource="sql/favorite.xml"/>
 	
 	<!-- 평점 -->
-	<sqlMap resource="/sql/rating.xml"/>
+	<sqlMap resource="sql/rating.xml"/>
 	
 	<!-- 제안 -->
-	<sqlMap resource="/sql/hopelist.xml"/>
+	<sqlMap resource="sql/hopelist.xml"/>
 </sqlMapConfig>

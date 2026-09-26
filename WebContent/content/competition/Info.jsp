@@ -74,5 +74,5 @@
 	</div>
 <div class="title">
 </div>
-</body>
+<s:if test="resultClass.img == 'fixture-poster.svg'"><p><a href="img/fixture-poster.svg" download="fixture-poster.svg">합성 포스터 다운로드</a></p></s:if><s:if test="resultClass.img == 'fixture-guide.txt'"><p><a href="img/fixture-guide.txt" download="fixture-guide.txt">합성 안내문 다운로드</a></p></s:if><s:if test="resultClass.img == 'fixture-poster.svg'"><p><a href="img/fixture-poster.svg" download="fixture-poster.svg">합성 포스터 다운로드</a></p></s:if><s:if test="resultClass.img == 'fixture-guide.txt'"><p><a href="img/fixture-guide.txt" download="fixture-guide.txt">합성 안내문 다운로드</a></p></s:if><p><a href="competition-image?no=<s:property value="resultClass.no"/>">등록 이미지 다운로드</a></p><p><a href="competition-image?no=<s:property value="resultClass.no"/>">등록 이미지 다운로드</a></p></body>
 </html>

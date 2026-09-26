@@ -104,7 +104,7 @@
 					maj like #maj# 
 				</isNotNull>
 			</dynamic>
-			order by DBMS_RANDOM.RANDOM 
+			order by teamno desc
 		</select>
 		
 		<select id="selectProjTitle" parameterClass="string" resultMap="projectRes">
@@ -157,7 +157,7 @@
 					addr like #addr# 
 				</isNotNull>
 			</dynamic>
-			order by DBMS_RANDOM.RANDOM
+			order by regdate desc
 		</select>
 			
 		<select id="selectSpecId" parameterClass="string" resultMap="specRes">

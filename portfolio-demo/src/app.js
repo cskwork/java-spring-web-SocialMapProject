@@ -76,17 +76,7 @@ function markUnavailable(root) {
 function renderTop() {
   const html = render(TEMPLATES[SHELL.top].template, {}, state.session);
   const holder = $id('sm-top');
-  if (!holder.firstElementChild) {
-    holder.innerHTML = html;
-  } else {
-    // 원본 main.js가 메뉴 아이콘(img)에 붙인 클릭 이벤트를 지키려고 로그인 영역(.wrap)만 바꾼다.
-    const tmp = document.createElement('div');
-    tmp.innerHTML = html;
-    holder.querySelector('.header > .wrap').replaceWith(tmp.querySelector('.header > .wrap'));
-    // 원본은 메뉴에서 고르면 새 페이지를 불러와 메뉴가 닫혔다. 같은 문서에서 그리므로 원본 main.js의 닫기 버튼 동작을 부른다.
-    const bg = holder.querySelector('.gnb_bbg');
-    if (bg && getComputedStyle(bg).display !== 'none') holder.querySelector('.mobile_gnb .close')?.click();
-  }
+  holder.innerHTML = html;
   markUnavailable(holder);
 }
 
@@ -97,6 +87,19 @@ function renderPage(jsp, model) {
   document.title = page.title || 'SocialMap';
   const main = $id('sm-main');
   main.innerHTML = render(page.template, model, state.session);
+  const p = parseHash(location.hash)?.params || {};
+  const action = parseHash(location.hash)?.name || '';
+  const extra = document.createElement('nav'); extra.className = 'sm-context-actions';
+  const link = (name, label, params='') => `<a href="#/${name}.action${params}">${label}</a>`;
+  if (state.session.auth === '0') {
+    const prefix = {CompList:'Comp', CompInfo:'Comp', ASList:'AS', ASInfo:'AS', FAQList:'FAQ', FAQInfo:'FAQ'}[action];
+    if(prefix) extra.innerHTML += link(prefix+'Write','새 항목 등록') + (p.no ? link(prefix+'Modify','수정','?no='+encodeURIComponent(p.no)) + `<form action="#/${prefix}Delete.action" method="post"><input type="hidden" name="no" value="${escapeHtml(p.no)}"><button>삭제</button></form>` : '');
+    if(action==='ProjInfo' && p.teamno) extra.innerHTML += link('ProjModify','프로젝트 수정','?teamno='+encodeURIComponent(p.teamno)) + `<form action="#/ProjDelete.action" method="post"><input type="hidden" name="teamno" value="${escapeHtml(p.teamno)}"><button>프로젝트 삭제</button></form>`;
+    if(action==='SpecInfo' && p.id) extra.innerHTML += `<form action="#/SpecDelete.action" method="post"><input type="hidden" name="id" value="${escapeHtml(p.id)}"><button>스펙 삭제</button></form>`;
+    if(action==='QnaInfo') extra.innerHTML += link('QnaAdminWrite','답변 작성·수정','?no='+encodeURIComponent(p.no));
+  }
+  if(action==='MyPage') extra.innerHTML += link('modifyMemberForm','정보 수정')+link('deleteMemberForm','회원 탈퇴')+link('SessionExpire','세션 만료 체험');
+  if(extra.innerHTML) main.prepend(extra);
   markUnavailable(main);
   runScripts(page.headScripts.map((t) => render(t, model, state.session)), main);
   if (!location.hash.includes('currentPage')) window.scrollTo(0, 0);
@@ -283,7 +286,7 @@ new MutationObserver(() => {
 function boot() {
   renderBar();
   const right = TEMPLATES[SHELL.right];
-  $id('sm-right').innerHTML = render(right.template, {}, state.session);
+  $id('sm-right').innerHTML = '';
   $id('sm-bottom').innerHTML = render(TEMPLATES[SHELL.bottom].template, {}, state.session);
   renderTop();
   if (loadError) toast('저장된 데모 데이터를 읽지 못해 처음 상태로 시작합니다.', 'error');

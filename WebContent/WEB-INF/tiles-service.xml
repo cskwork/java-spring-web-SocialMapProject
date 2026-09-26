@@ -74,5 +74,13 @@
       	<put-attribute name="guide1"       value="/guide/guideHome1.jsp" />
       	<put-attribute name="guide2"       value="/guide/guideHome2.jsp" />
       	<put-attribute name="guide3"       value="/guide/guideHome3.jsp" />
-	</definition>
+	<put-attribute name="msglist" value="/mypage/Msg/List.jsp"/>
+<put-attribute name="msgwrite" value="/mypage/Msg/Write.jsp"/>
+<put-attribute name="msginfo" value="/mypage/Msg/info.jsp"/>
+<put-attribute name="ratinglist" value="/mypage/Rating/List.jsp"/>
+<put-attribute name="ratingwrite" value="/mypage/Rating/Write.jsp"/>
+<put-attribute name="withdraw" value="/mypage/favorite/checkPassword.jsp"/>
+<put-attribute name="managewrite" value="/compat/manage.jsp"/>
+<put-attribute name="adminhome" value="/admin/adminPageHome.jsp"/>
+</definition>
 </tiles-definitions>

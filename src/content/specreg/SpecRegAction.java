@@ -78,9 +78,7 @@ public class SpecRegAction extends ActionSupport {
 	
 	
 	public SpecRegAction() throws IOException, SQLException {
-		reader = Resources.getResourceAsReader("sqlMapConfig.xml"); // sqlMapConfig.xml 파일의 설정내용을 가져온다.
-		sqlMapper = SqlMapClientBuilder.buildSqlMapClient(reader); // sqlMapConfig.xml의 내용을 적용한 sqlMapper 객체 생성.
-		reader.close();
+		sqlMapper = security.Database.client();
 		
 		/*필터 관련*/
 		//스펙 검색 필터
@@ -134,7 +132,9 @@ public class SpecRegAction extends ActionSupport {
 			list = sqlMapper.queryForList("content.selectSpecList", sVO);
 		}
 
-		totalCount = list.size();
+		java.util.Iterator<SpecRegVO> visible=list.iterator();
+        while(visible.hasNext()){SpecRegVO row=visible.next();if(row.getShowlog()!=1&&!row.getId().equals(ActionContext.getContext().getSession().get("id"))&&!"0".equals(ActionContext.getContext().getSession().get("auth")))visible.remove();}
+        totalCount = list.size();
 
 		page = new PagingAction(currentPage, totalCount, blockCount, blockPage, num, "SpecList", "");
 		pagingHtml = page.getPagingHtml().toString();
@@ -154,7 +154,7 @@ public class SpecRegAction extends ActionSupport {
 		} else {
 			setId(session.get("id"));
 			setName(session.get("name"));
-			setAuth(Integer.parseInt(session.get("auth")));
+			setAuth(Integer.parseInt(session.get("auth") == null ? "-1" : session.get("auth")));
 
 			for (SpecRegVO vo : list) {
 				if (vo.getId().equals(session.get("id"))) {
@@ -182,7 +182,7 @@ public class SpecRegAction extends ActionSupport {
 		} else {
 			setId(session.get("id"));
 			setName(session.get("name"));
-			setAuth(Integer.parseInt(session.get("auth")));
+			setAuth(Integer.parseInt(session.get("auth") == null ? "-1" : session.get("auth")));
 	
 			setMainpage("specinfo");
 			return SUCCESS;
@@ -201,7 +201,7 @@ public class SpecRegAction extends ActionSupport {
 		
 		tempResultClass = (MemberVO) sqlMapper.queryForObject("member.loginMember", session.get("id"));		
 
-		paramClass.setId(getId());
+		paramClass.setId((String)ActionContext.getContext().getSession().get("id"));
 		paramClass.setExp(getExp());
 		paramClass.setAddr(tempResultClass.getAddr());
 		paramClass.setMaj(tempResultClass.getMaj());		
@@ -220,7 +220,7 @@ public class SpecRegAction extends ActionSupport {
 		
 		setId(session.get("id"));
 		setName(session.get("name"));
-		setAuth(Integer.parseInt(session.get("auth")));
+		setAuth(Integer.parseInt(session.get("auth") == null ? "-1" : session.get("auth")));
 
 		setMainpage("speclist");
 
@@ -237,7 +237,7 @@ public class SpecRegAction extends ActionSupport {
 
 			setId(session.get("id"));
 			setName(session.get("name"));
-			setAuth(Integer.parseInt(session.get("auth")));
+			setAuth(Integer.parseInt(session.get("auth") == null ? "-1" : session.get("auth")));
 			
 			resultClass = (SpecRegVO) sqlMapper.queryForObject("content.selectSpec", session.get("id"));
 			

@@ -63,7 +63,7 @@ test('원본 목록 화면 마크업이 그대로 쓰인다 (표 구조·필드�
     list: [{ teamno: '7', leaderid: 'leader08', title: '민원 신청 화면 개선안', comp: 'c', maj: 'm', startdate: '2026-10-10', enddate: '2026-11-28', currmem: '2', recmem: '2', loc: '세종', sal: '0' }],
     complist: ['c'], loclist: ['세종'], majlist: ['m'], check: true, pagingHtml: '',
   }, { auth: '2' });
-  for (const piece of ['<table class="listtable">', '<td><strong>현재모집인원/모집인원</strong></td>', '<select name="searchnum">', '<input type="submit" value="스크랩하기"/>']) {
+  for (const piece of ['<table class="listtable sm-project-list">', '<td><strong>현재 참여 / 추가 모집</strong></td>', '<select name="searchnum">', '<input type="submit" value="스크랩하기"/>']) {
     assert.ok(src.includes(piece), `원본에 ${piece}`);
     assert.ok(html.includes(piece), `결과에 ${piece}`);
   }

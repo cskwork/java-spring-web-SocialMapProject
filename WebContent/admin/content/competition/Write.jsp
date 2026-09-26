@@ -20,7 +20,7 @@
 			return true;
 		}
 	</script>
-</head>
+<link rel="stylesheet" href="css/desk.css" /><meta name="csrf-token" content="<s:property value="#session.csrf"/>"><script src="js/native-forms.js" defer></script></head>
 <body>
 	<s:if test="step == 2 && no == 0">
 		<script type="text/javascript">location.href="CompList.action";</script>
@@ -30,10 +30,10 @@
 	</s:elseif>
 	<s:else>
 		<s:if test="no == 0">
-			<form action="CompWrite.action" method="post" enctype="multipart/form-data" onsubmit="return validation();">
+			<form action="CompWrite.action" method="post"  onsubmit="return validation();">
 		</s:if>
 		<s:else>
-			<form action="CompModify.action" method="post" enctype="multipart/form-data" onsubmit="return validation();">
+			<form action="CompModify.action" method="post"  onsubmit="return validation();">
 				<s:hidden name="no" value="%{no}" />
 		</s:else>
 			<table border="0" align="center">
